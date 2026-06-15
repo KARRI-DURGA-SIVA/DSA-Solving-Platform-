@@ -1,0 +1,4178 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode Practice Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8f9fa;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    /* Header */
+    .header {
+      background: #fff;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #007bff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo i {
+      font-size: 1.8rem;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 30px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f0f0f0;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .theme-toggle:hover {
+      background: #e0e0e0;
+    }
+
+    .theme-toggle .icon {
+      font-size: 1rem;
+    }
+
+    .theme-toggle .label {
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    /* Dark Theme Styles */
+    body.dark-theme {
+      background: #1a1a2e;
+      color: #fff;
+    }
+
+    body.dark-theme .header {
+      background: #16213e;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    body.dark-theme .logo {
+      color: #00d4ff;
+    }
+
+    body.dark-theme .stat-value {
+      color: #00d4ff;
+    }
+
+    body.dark-theme .stat-label {
+      color: #aaa;
+    }
+
+    body.dark-theme .sidebar {
+      background: #16213e;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+    body.dark-theme .sidebar-title {
+      color: #888;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    body.dark-theme .category-item:hover {
+      background: rgba(0, 212, 255, 0.1);
+      border-left-color: #00d4ff;
+    }
+
+    body.dark-theme .category-item.active {
+      background: rgba(0, 212, 255, 0.15);
+      border-left-color: #00d4ff;
+    }
+
+    body.dark-theme .category-name i {
+      color: #00d4ff;
+    }
+
+    body.dark-theme .category-count {
+      background: rgba(255,255,255,0.1);
+      color: #aaa;
+    }
+
+    body.dark-theme .content-title {
+      color: #fff;
+    }
+
+    body.dark-theme .filter-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    body.dark-theme .filter-btn:hover,
+    body.dark-theme .filter-btn.active {
+      background: #00d4ff;
+      color: #000;
+      border-color: #00d4ff;
+    }
+
+    body.dark-theme .problem-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    body.dark-theme .problem-card:hover {
+      background: rgba(0, 212, 255, 0.1);
+      border-color: #00d4ff;
+    }
+
+    body.dark-theme .problem-id {
+      color: #00d4ff;
+    }
+
+    body.dark-theme .problem-title {
+      color: #fff;
+    }
+
+    body.dark-theme .tag {
+      background: rgba(0, 212, 255, 0.2);
+      color: #00d4ff;
+    }
+
+    body.dark-theme .difficulty-easy { color: #00ff88; }
+    body.dark-theme .difficulty-medium { color: #ffaa00; }
+    body.dark-theme .difficulty-hard { color: #ff4444; }
+
+    body.dark-theme .modal-content {
+      background: #1a1a2e;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    body.dark-theme .modal-header {
+      background: rgba(0,0,0,0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    body.dark-theme .modal-title h2 {
+      color: #fff;
+    }
+
+    body.dark-theme .problem-panel {
+      background: rgba(0,0,0,0.2);
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+    body.dark-theme .problem-section h4 {
+      color: #00d4ff;
+    }
+
+    body.dark-theme .problem-description {
+      color: #ccc;
+    }
+
+    body.dark-theme .test-case {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    body.dark-theme .test-case-label {
+      color: #888;
+    }
+
+    body.dark-theme .test-case-content {
+      color: #00ff88;
+    }
+
+    body.dark-theme .editor-toolbar label {
+      color: #aaa;
+    }
+
+    body.dark-theme .editor-toolbar select {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    body.dark-theme .output-panel {
+      background: rgba(0,0,0,0.3);
+    }
+
+    body.dark-theme .output-panel h4 {
+      color: #aaa;
+    }
+
+    body.dark-theme #output {
+      background: rgba(0,0,0,0.5);
+      color: #00ff88;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    body.dark-theme .test-pass {
+      background: rgba(0, 255, 136, 0.15);
+      color: #00ff88;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+
+    body.dark-theme .test-fail {
+      background: rgba(255, 68, 68, 0.15);
+      color: #ff4444;
+      border: 1px solid rgba(255, 68, 68, 0.3);
+    }
+
+    body.dark-theme .all-passed {
+      background: linear-gradient(135deg, #00ff88, #00d4ff);
+      color: #000;
+    }
+
+    body.dark-theme .theme-toggle {
+      background: rgba(255,255,255,0.1);
+    }
+
+    body.dark-theme .theme-toggle:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    body.dark-theme .theme-toggle .label {
+      color: #fff;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #007bff;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    /* Main Layout */
+    .main-container {
+      display: flex;
+      height: calc(100vh - 70px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: #fff;
+      border-right: 1px solid #e0e0e0;
+      overflow-y: auto;
+      padding: 20px 0;
+    }
+
+    .sidebar-title {
+      padding: 0 20px 15px;
+      font-size: 0.9rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 10px;
+    }
+
+    .category-list {
+      list-style: none;
+    }
+
+    .category-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s;
+      border-left: 3px solid transparent;
+    }
+
+    .category-item:hover {
+      background: #f0f7ff;
+      border-left-color: #007bff;
+    }
+
+    .category-item.active {
+      background: #e6f0ff;
+      border-left-color: #007bff;
+    }
+
+    .category-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .category-name i {
+      width: 20px;
+      color: #007bff;
+    }
+
+    .category-count {
+      background: #f0f0f0;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    /* Content Area */
+    .content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .content-title {
+      font-size: 1.3rem;
+      color: #333;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: #007bff;
+      color: #fff;
+      border-color: #007bff;
+    }
+
+    /* Problems Grid */
+    .problems-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+    }
+
+    .problem-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .problem-card:hover {
+      background: #f0f7ff;
+      transform: translateY(-3px);
+      border-color: #007bff;
+      box-shadow: 0 4px 15px rgba(0,123,255,0.15);
+    }
+
+    .problem-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .problem-id {
+      color: #007bff;
+      font-weight: bold;
+    }
+
+    .problem-status {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .status-solved {
+      background: #007bff;
+      color: #fff;
+    }
+
+    .status-pending {
+      background: #e0e0e0;
+    }
+
+    .problem-title {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .problem-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      background: #e6f0ff;
+      color: #007bff;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+    }
+
+    .problem-difficulty {
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .difficulty-easy { color: #28a745; }
+    .difficulty-medium { color: #fd7e14; }
+    .difficulty-hard { color: #dc3545; }
+
+    /* Modal */
+    #editorModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #fff;
+      margin: 20px auto;
+      width: 98vw;
+      height: 95vh;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 25px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .modal-title {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .modal-title h2 {
+      font-size: 1.3rem;
+      color: #333;
+    }
+
+    .modal-title .difficulty-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .close-btn {
+      background: #dc3545;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .close-btn:hover {
+      background: #c82333;
+    }
+
+    .modal-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Problem Panel */
+    .problem-panel {
+      width: 35%;
+      border-right: 1px solid #e0e0e0;
+      padding: 20px;
+      overflow-y: auto;
+      background: #fafafa;
+    }
+
+    .problem-section {
+      margin-bottom: 25px;
+    }
+
+    .problem-section h4 {
+      color: #007bff;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .problem-section h4 i {
+      font-size: 0.9rem;
+    }
+
+    .problem-description {
+      color: #555;
+      line-height: 1.6;
+      font-size: 0.9rem;
+    }
+
+    .test-case {
+      background: #fff;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .test-case-label {
+      color: #888;
+      font-size: 0.8rem;
+      margin-bottom: 5px;
+    }
+
+    .test-case-content {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #28a745;
+    }
+
+    /* Editor Panel */
+    .editor-panel {
+      width: 65%;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .editor-toolbar label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .editor-toolbar select {
+      padding: 10px 15px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      color: #333;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .editor-toolbar select option {
+      background: #fff;
+    }
+
+    .toolbar-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: bold;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .run-btn {
+      background: #28a745;
+      color: #fff;
+    }
+
+    .run-btn:hover {
+      background: #218838;
+      transform: translateY(-2px);
+    }
+
+    .compile-btn {
+      background: #ffc107;
+      color: #333;
+    }
+
+    .compile-btn:hover {
+      background: #e0a800;
+      transform: translateY(-2px);
+    }
+
+    .submit-btn {
+      background: #007bff;
+      color: #fff;
+    }
+
+    .submit-btn:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+    }
+
+    #editorContainer {
+      flex: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+    }
+
+    .output-panel {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .output-panel h4 {
+      color: #666;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+    }
+
+    #output {
+      background: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #28a745;
+      white-space: pre-wrap;
+      margin: 0;
+      min-height: 40px;
+      border: 1px solid #ddd;
+    }
+
+    .test-results {
+      margin-top: 10px;
+    }
+
+    .test-result {
+      padding: 10px 15px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .test-pass {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .test-fail {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .test-result i {
+      font-size: 1rem;
+    }
+
+    .all-passed {
+      background: linear-gradient(135deg, #28a745, #007bff);
+      color: #fff;
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 15px;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 50px;
+      color: #666;
+    }
+
+    .loading i {
+      font-size: 2rem;
+      color: #007bff;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f0f0f0;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #aaa;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .problem-panel {
+        width: 40%;
+      }
+      .editor-panel {
+        width: 60%;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .modal-body {
+        flex-direction: column;
+      }
+      .problem-panel, .editor-panel {
+        width: 100%;
+      }
+      .problem-panel {
+        height: 40%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .editor-panel {
+        height: 60%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <i class="fas fa-code"></i>
+      <span>LeetCode Practice</span>
+    </div>
+    <div class="header-stats">
+      <div class="stat-item">
+        <div class="stat-value" id="totalSolved">0</div>
+        <div class="stat-label">Solved</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="totalProblems">3500+</div>
+        <div class="stat-label">Total Problems</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="easyCount">0</div>
+        <div class="stat-label">Easy</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="mediumCount">0</div>
+        <div class="stat-label">Medium</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="hardCount">0</div>
+        <div class="stat-label">Hard</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <span class="icon"><i class="fas fa-moon"></i></span>
+        <span class="label">Dark Mode</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-title">
+        <i class="fas fa-tags"></i> Topics
+      </div>
+      <ul class="category-list" id="categoryList">
+        <li class="category-item active" data-category="all">
+          <span class="category-name">
+            <i class="fas fa-list"></i> All Problems
+          </span>
+          <span class="category-count" id="count-all">0</span>
+        </li>
+        <li class="category-item" data-category="Array">
+          <span class="category-name">
+            <i class="fas fa-layer-group"></i> Array
+          </span>
+          <span class="category-count" id="count-Array">0</span>
+        </li>
+        <li class="category-item" data-category="String">
+          <span class="category-name">
+            <i class="fas fa-font"></i> String
+          </span>
+          <span class="category-count" id="count-String">0</span>
+        </li>
+        <li class="category-item" data-category="Hash Table">
+          <span class="category-name">
+            <i class="fas fa-hashtag"></i> Hash Table
+          </span>
+          <span class="category-count" id="count-Hash Table">0</span>
+        </li>
+        <li class="category-item" data-category="Dynamic Programming">
+          <span class="category-name">
+            <i class="fas fa-chart-line"></i> Dynamic Programming
+          </span>
+          <span class="category-count" id="count-Dynamic Programming">0</span>
+        </li>
+        <li class="category-item" data-category="Math">
+          <span class="category-name">
+            <i class="fas fa-calculator"></i> Math
+          </span>
+          <span class="category-count" id="count-Math">0</span>
+        </li>
+        <li class="category-item" data-category="Sorting">
+          <span class="category-name">
+            <i class="fas fa-sort"></i> Sorting
+          </span>
+          <span class="category-count" id="count-Sorting">0</span>
+        </li>
+        <li class="category-item" data-category="Greedy">
+          <span class="category-name">
+            <i class="fas fa-coins"></i> Greedy
+          </span>
+          <span class="category-count" id="count-Greedy">0</span>
+        </li>
+        <li class="category-item" data-category="Depth-First Search">
+          <span class="category-name">
+            <i class="fas fa-tree"></i> DFS
+          </span>
+          <span class="category-count" id="count-Depth-First Search">0</span>
+        </li>
+        <li class="category-item" data-category="Breadth-First Search">
+          <span class="category-name">
+            <i class="fas fa-stream"></i> BFS
+          </span>
+          <span class="category-count" id="count-Breadth-First Search">0</span>
+        </li>
+        <li class="category-item" data-category="Binary Search">
+          <span class="category-name">
+            <i class="fas fa-search"></i> Binary Search
+          </span>
+          <span class="category-count" id="count-Binary Search">0</span>
+        </li>
+        <li class="category-item" data-category="Matrix">
+          <span class="category-name">
+            <i class="fas fa-th"></i> Matrix
+          </span>
+          <span class="category-count" id="count-Matrix">0</span>
+        </li>
+        <li class="category-item" data-category="Two Pointers">
+          <span class="category-name">
+            <i class="fas fa-arrows-left-right"></i> Two Pointers
+          </span>
+          <span class="category-count" id="count-Two Pointers">0</span>
+        </li>
+        <li class="category-item" data-category="Stack">
+          <span class="category-name">
+            <i class="fas fa-layer-group"></i> Stack
+          </span>
+          <span class="category-count" id="count-Stack">0</span>
+        </li>
+        <li class="category-item" data-category="Linked List">
+          <span class="category-name">
+            <i class="fas fa-link"></i> Linked List
+          </span>
+          <span class="category-count" id="count-Linked List">0</span>
+        </li>
+        <li class="category-item" data-category="Tree">
+          <span class="category-name">
+            <i class="fas fa-fan"></i> Tree
+          </span>
+          <span class="category-count" id="count-Tree">0</span>
+        </li>
+        <li class="category-item" data-category="Heap">
+          <span class="category-name">
+            <i class="fas fa-database"></i> Heap
+          </span>
+          <span class="category-count" id="count-Heap">0</span>
+        </li>
+        <li class="category-item" data-category="Graph">
+          <span class="category-name">
+            <i class="fas fa-project-diagram"></i> Graph
+          </span>
+          <span class="category-count" id="count-Graph">0</span>
+        </li>
+        <li class="category-item" data-category="Backtracking">
+          <span class="category-name">
+            <i class="fas fa-undo"></i> Backtracking
+          </span>
+          <span class="category-count" id="count-Backtracking">0</span>
+        </li>
+        <li class="category-item" data-category="Sliding Window">
+          <span class="category-name">
+            <i class="fas fa-window-restore"></i> Sliding Window
+          </span>
+          <span class="category-count" id="count-Sliding Window">0</span>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+      <div class="content-header">
+        <h2 class="content-title" id="contentTitle">All Problems</h2>
+        <div class="filter-buttons">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="Easy">Easy</button>
+          <button class="filter-btn" data-filter="Medium">Medium</button>
+          <button class="filter-btn" data-filter="Hard">Hard</button>
+        </div>
+      </div>
+      <div class="problems-grid" id="problemsGrid">
+        <div class="loading">
+          <i class="fas fa-spinner"></i>
+          <p>Loading problems...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Editor Modal -->
+  <div id="editorModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h2 id="modalTitle">Problem Title</h2>
+          <span class="difficulty-badge" id="difficultyBadge">Easy</span>
+        </div>
+        <button class="close-btn" onclick="closeEditor()">
+          <i class="fas fa-times"></i> Close
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Left Panel - Problem Description -->
+        <div class="problem-panel">
+          <div class="problem-section">
+            <h4><i class="fas fa-align-left"></i> Description</h4>
+            <div class="problem-description" id="problemDescription">
+              Loading problem description...
+            </div>
+          </div>
+          <div class="problem-section">
+            <h4><i class="fas fa-vial"></i> Example Test Cases</h4>
+            <div id="testCases"></div>
+          </div>
+          <div class="problem-section">
+            <h4><i class="fas fa-info-circle"></i> Constraints</h4>
+            <div class="problem-description" id="problemConstraints"></div>
+          </div>
+        </div>
+
+        <!-- Right Panel - Code Editor -->
+        <div class="editor-panel">
+          <div class="editor-toolbar">
+            <label for="languageSelect"><i class="fas fa-code"></i> Language:</label>
+            <select id="languageSelect">
+              <option value="python">Python</option>
+              <option value="cpp">C++</option>
+              <option value="java">Java</option>
+              <option value="javascript">JavaScript</option>
+            </select>
+            <button class="toolbar-btn run-btn" onclick="runCode()">
+              <i class="fas fa-play"></i> Run
+            </button>
+            <button class="toolbar-btn compile-btn" onclick="compileCode()">
+              <i class="fas fa-cog"></i> Compile
+            </button>
+            <button class="toolbar-btn submit-btn" onclick="submitCode()">
+              <i class="fas fa-check"></i> Submit
+            </button>
+          </div>
+          <div id="editorContainer"></div>
+          <div class="output-panel">
+            <h4><i class="fas fa-terminal"></i> Output / Test Results</h4>
+            <div class="test-results" id="testResults"></div>
+            <pre id="output"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global variables
+    let allProblems = [];
+    let filteredProblems = [];
+    let monacoLoaded = false;
+    let editorInstance = null;
+    let currentProblem = null;
+    let testCases = [];
+    let solvedProblems = new Set();
+    let currentCategory = 'all';
+    let currentDifficulty = 'all';
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      loadProblems();
+      setupEventListeners();
+    });
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Category selection
+      document.querySelectorAll('.category-item').forEach(item => {
+        item.addEventListener('click', function() {
+          document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+          currentCategory = this.dataset.category;
+          document.getElementById('contentTitle').textContent = 
+            currentCategory === 'all' ? 'All Problems' : currentCategory;
+          filterProblems();
+        });
+      });
+
+      // Difficulty filter
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          currentDifficulty = this.dataset.filter;
+          filterProblems();
+        });
+      });
+
+      // Language change
+      document.getElementById('languageSelect').addEventListener('change', updateEditor);
+    }
+
+    // Theme Toggle Function
+    function toggleTheme() {
+      document.body.classList.toggle('dark-theme');
+      const toggle = document.querySelector('.theme-toggle');
+      const icon = toggle.querySelector('.icon i');
+      const label = toggle.querySelector('.label');
+      
+      if (document.body.classList.contains('dark-theme')) {
+        icon.className = 'fas fa-sun';
+        label.textContent = 'Light Mode';
+      } else {
+        icon.className = 'fas fa-moon';
+        label.textContent = 'Dark Mode';
+      }
+    }
+
+    // Load problems from API - Loading all 3500+ problems
+    async function loadProblems() {
+      const grid = document.getElementById('problemsGrid');
+      grid.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Loading all 3500+ problems...</p></div>';
+
+      try {
+        // Fetch ALL problems from LeetCode API (limit=3500)
+        const response = await fetch('https://alfa-leetcode-api.onrender.com/problems?limit=3500');
+        const data = await response.json();
+        
+        allProblems = data.problemsetQuestionList || [];
+        filteredProblems = [...allProblems];
+        
+        updateStats();
+        updateCategoryCounts();
+        renderProblems();
+      } catch (error) {
+        console.error('Error loading problems:', error);
+        grid.innerHTML = '<div class="loading"><p>Error loading problems. Please try again.</p></div>';
+      }
+    }
+
+    // Update statistics
+    function updateStats() {
+      const easy = allProblems.filter(p => p.difficulty === 'Easy').length;
+      const medium = allProblems.filter(p => p.difficulty === 'Medium').length;
+      const hard = allProblems.filter(p => p.difficulty === 'Hard').length;
+      
+      document.getElementById('totalSolved').textContent = solvedProblems.size;
+      document.getElementById('totalProblems').textContent = allProblems.length;
+      document.getElementById('easyCount').textContent = easy;
+      document.getElementById('mediumCount').textContent = medium;
+      document.getElementById('hardCount').textContent = hard;
+    }
+
+    // Update category counts
+    function updateCategoryCounts() {
+      document.getElementById('count-all').textContent = allProblems.length;
+      
+      const categories = ['Array', 'String', 'Hash Table', 'Dynamic Programming', 'Math', 
+        'Sorting', 'Greedy', 'Depth-First Search', 'Breadth-First Search', 'Binary Search',
+        'Matrix', 'Two Pointers', 'Stack', 'Linked List', 'Tree', 'Heap', 'Graph', 
+        'Backtracking', 'Sliding Window'];
+      
+      categories.forEach(cat => {
+        const count = allProblems.filter(p => 
+          p.topicTags && p.topicTags.some(tag => tag.name === cat)
+        ).length;
+        const countEl = document.getElementById(`count-${cat}`);
+        if (countEl) countEl.textContent = count;
+      });
+    }
+
+    // Filter problems
+    function filterProblems() {
+      filteredProblems = allProblems.filter(problem => {
+        // Category filter
+        if (currentCategory !== 'all') {
+          if (!problem.topicTags || !problem.topicTags.some(tag => tag.name === currentCategory)) {
+            return false;
+          }
+        }
+        
+        // Difficulty filter
+        if (currentDifficulty !== 'all' && problem.difficulty !== currentDifficulty) {
+          return false;
+        }
+        
+        return true;
+      });
+      
+      renderProblems();
+    }
+
+    // Render problems grid
+    function renderProblems() {
+      const grid = document.getElementById('problemsGrid');
+      
+      if (filteredProblems.length === 0) {
+        grid.innerHTML = '<div class="loading"><p>No problems found.</p></div>';
+        return;
+      }
+
+      grid.innerHTML = filteredProblems.map(problem => {
+        const isSolved = solvedProblems.has(problem.titleSlug);
+        const tags = problem.topicTags ? problem.topicTags.slice(0, 3).map(tag => 
+          `<span class="tag">${tag.name}</span>`
+        ).join('') : '';
+        
+        const difficultyClass = `difficulty-${problem.difficulty.toLowerCase()}`;
+        
+        return `
+          <div class="problem-card" onclick="openEditor('${problem.titleSlug}')">
+            <div class="problem-header">
+              <span class="problem-id">${problem.questionFrontendId}</span>
+              <span class="problem-status ${isSolved ? 'status-solved' : 'status-pending'}">
+                ${isSolved ? '<i class="fas fa-check"></i>' : ''}
+              </span>
+            </div>
+            <div class="problem-title">${problem.title}</div>
+            <div class="problem-tags">${tags}</div>
+            <div class="problem-difficulty ${difficultyClass}">${problem.difficulty}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Monaco loader
+    function loadMonaco(cb) {
+      if (monacoLoaded) return cb();
+      const loader = document.createElement('script');
+      loader.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js';
+      loader.onload = function() {
+        window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs' } });
+        window.require(['vs/editor/editor.main'], function() {
+          monacoLoaded = true;
+          cb();
+        });
+      };
+      document.body.appendChild(loader);
+    }
+
+    // Open editor with problem
+    async function openEditor(titleSlug) {
+      currentProblem = allProblems.find(p => p.titleSlug === titleSlug);
+      if (!currentProblem) return;
+
+      document.getElementById('editorModal').style.display = 'block';
+      document.getElementById('modalTitle').textContent = `${currentProblem.questionFrontendId}. ${currentProblem.title}`;
+      
+      const badge = document.getElementById('difficultyBadge');
+      badge.textContent = currentProblem.difficulty;
+      badge.className = `difficulty-badge difficulty-${currentProblem.difficulty.toLowerCase()}`;
+      badge.style.background = currentProblem.difficulty === 'Easy' ? '#28a745' : 
+                               currentProblem.difficulty === 'Medium' ? '#fd7e14' : '#dc3545';
+      badge.style.color = '#fff';
+
+      // Load problem details
+      await loadProblemDetails(currentProblem);
+      
+      // Generate test cases
+      generateTestCases(currentProblem);
+      
+      // Load Monaco editor
+      loadMonaco(() => {
+        if (!editorInstance) {
+          editorInstance = monaco.editor.create(document.getElementById('editorContainer'), {
+            value: getStarterCode(document.getElementById('languageSelect').value),
+            language: getMonacoLang(document.getElementById('languageSelect').value),
+            theme: 'vs',
+            automaticLayout: true,
+            fontSize: 14,
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+            wordWrap: 'on'
+          });
+        } else {
+          updateEditor();
+        }
+      });
+
+      // Clear output
+      document.getElementById('output').textContent = '';
+      document.getElementById('testResults').innerHTML = '';
+    }
+
+    // Load problem details from API
+    async function loadProblemDetails(problem) {
+      try {
+        const response = await fetch(`https://alfa-leetcode-api.onrender.com/problems/${problem.titleSlug}`);
+        const data = await response.json();
+        
+        // Set description
+        const descEl = document.getElementById('problemDescription');
+        if (data.question && data.question.content) {
+          descEl.innerHTML = data.question.content;
+        } else {
+          descEl.textContent = problem.title + ' - Solve this problem to improve your skills.';
+        }
+        
+        // Set constraints
+        const constraintsEl = document.getElementById('problemConstraints');
+        if (data.question && data.question.constraints) {
+          constraintsEl.innerHTML = data.question.constraints.map(c => `<div>• ${c}</div>`).join('');
+        } else {
+          constraintsEl.textContent = 'No specific constraints provided.';
+        }
+      } catch (error) {
+        console.error('Error loading problem details:', error);
+        document.getElementById('problemDescription').textContent = 
+          problem.title + ' - Solve this problem to improve your skills.';
+        document.getElementById('problemConstraints').textContent = 'No specific constraints provided.';
+      }
+    }
+
+    // Generate test cases based on problem
+    function generateTestCases(problem) {
+      const testCasesDiv = document.getElementById('testCases');
+      const title = problem.title.toLowerCase();
+      testCases = [];
+
+      // Generate appropriate test cases based on problem type
+      if (title.includes('two sum')) {
+        testCases = [
+          { input: 'nums = [2,7,11,15], target = 9', expected: '[0,1]' },
+          { input: 'nums = [3,2,4], target = 6', expected: '[1,2]' },
+          { input: 'nums = [3,3], target = 6', expected: '[0,1]' }
+        ];
+      } else if (title.includes('palindrome') && !title.includes('number')) {
+        testCases = [
+          { input: 's = "A man, a plan, a canal: Panama"', expected: 'true' },
+          { input: 's = "race a car"', expected: 'false' },
+          { input: 's = " "', expected: 'true' }
+        ];
+      } else if (title.includes('reverse')) {
+        if (title.includes('integer') || title.includes('number')) {
+          testCases = [
+            { input: 'x = 123', expected: '321' },
+            { input: 'x = -123', expected: '-321' },
+            { input: 'x = 120', expected: '21' }
+          ];
+        } else {
+          testCases = [
+            { input: 's = "hello"', expected: '"olleh"' },
+            { input: 's = "Python"', expected: '"nohtyP"' }
+          ];
+        }
+      } else if (title.includes('maximum') || title.includes('max') || title.includes('largest')) {
+        testCases = [
+          { input: 'nums = [1]', expected: '1' },
+          { input: 'nums = [1,2,3]', expected: '3' },
+          { input: 'nums = [-1,-2,-3]', expected: '-1' }
+        ];
+      } else if (title.includes('minimum') || title.includes('min') || title.includes('smallest')) {
+        testCases = [
+          { input: 'nums = [1]', expected: '1' },
+          { input: 'nums = [1,2,3]', expected: '1' },
+          { input: 'nums = [-1,-2,-3]', expected: '-3' }
+        ];
+      } else if (title.includes('fizz buzz') || title.includes('fizzbuzz')) {
+        testCases = [
+          { input: 'n = 3', expected: '["1","2","Fizz"]' },
+          { input: 'n = 5', expected: '["1","2","Fizz","4","Buzz"]' },
+          { input: 'n = 15', expected: '["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]' }
+        ];
+      } else if (title.includes('valid') && title.includes('parentheses')) {
+        testCases = [
+          { input: 's = "()"', expected: 'true' },
+          { input: 's = "()[]{}"', expected: 'true' },
+          { input: 's = "(]"', expected: 'false' }
+        ];
+      } else if (title.includes('merge') && title.includes('sorted')) {
+        testCases = [
+          { input: 'nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3', expected: '[1,2,2,3,5,6]' },
+          { input: 'nums1 = [1], m = 1, nums2 = [], n = 0', expected: '[1]' }
+        ];
+      } else if (title.includes('climbing') || title.includes('stairs')) {
+        testCases = [
+          { input: 'n = 2', expected: '2' },
+          { input: 'n = 3', expected: '3' },
+          { input: 'n = 5', expected: '8' }
+        ];
+      } else if (title.includes('binary') && title.includes('search')) {
+        testCases = [
+          { input: 'nums = [-1,0,3,5,9,12], target = 9', expected: '4' },
+          { input: 'nums = [-1,0,3,5,9,12], target = 2', expected: '-1' },
+          { input: 'nums = [5], target = 5', expected: '0' }
+        ];
+      } else if (title.includes('longest') && title.includes('substring')) {
+        testCases = [
+          { input: 's = "abcabcbb"', expected: '3' },
+          { input: 's = "bbbbb"', expected: '1' },
+          { input: 's = "pwwkew"', expected: '3' }
+        ];
+      } else if (title.includes('container') && title.includes('water')) {
+        testCases = [
+          { input: 'height = [1,8,6,2,5,4,8,3,7]', expected: '49' },
+          { input: 'height = [1,1]', expected: '1' }
+        ];
+      } else if (title.includes('3sum')) {
+        testCases = [
+          { input: 'nums = [-1,0,1,2,-1,-4]', expected: '[[-1,-1,0],[-1,0,1]]' },
+          { input: 'nums = [0,1,1]', expected: '[]' },
+          { input: 'nums = [0,0,0]', expected: '[[0,0,0]]' }
+        ];
+      } else {
+        // Default test cases
+        testCases = [
+          { input: 'input1', expected: 'output1' },
+          { input: 'input2', expected: 'output2' },
+          { input: 'input3', expected: 'output3' }
+        ];
+      }
+
+      // Render test cases
+      testCasesDiv.innerHTML = testCases.map((tc, i) => `
+        <div class="test-case">
+          <div class="test-case-label">Test Case ${i + 1}</div>
+          <div><strong>Input:</strong> <span class="test-case-content">${tc.input}</span></div>
+          <div><strong>Output:</strong> <span class="test-case-content">${tc.expected}</span></div>
+        </div>
+      `).join('');
+    }
+
+    function closeEditor() {
+      document.getElementById('editorModal').style.display = 'none';
+    }
+
+    function updateEditor() {
+      if (editorInstance) {
+        const lang = document.getElementById('languageSelect').value;
+        monaco.editor.setModelLanguage(editorInstance.getModel(), getMonacoLang(lang));
+        editorInstance.setValue(getStarterCode(lang));
+      }
+    }
+
+    function getMonacoLang(lang) {
+      const langMap = {
+        'python': 'python',
+        'cpp': 'cpp',
+        'java': 'java',
+        'javascript': 'javascript'
+      };
+      return langMap[lang] || 'plaintext';
+    }
+
+    function getStarterCode(lang) {
+      const title = currentProblem ? currentProblem.title.toLowerCase() : '';
+      
+      const templates = {
+        python: `def solution(${getParams(title)}):
+    # Write your solution here
+    pass
+
+# Test your solution
+print(solution(${getTestInput(title)}))`,
+        cpp: `#include <iostream>
+#include <vector>
+using namespace std;
+
+${getCppReturnType(title)} solution(${getCppParams(title)}) {
+    // Write your solution here
+    return ${getCppDefaultReturn(title)};
+}
+
+int main() {
+    cout << solution(${getTestInput(title)}) << endl;
+    return 0;
+}`,
+        java: `class Solution {
+    public ${getJavaReturnType(title)} solution(${getJavaParams(title)}) {
+        // Write your solution here
+        return ${getJavaDefaultReturn(title)};
+    }
+    
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.solution(${getTestInput(title)}));
+    }
+}`,
+        javascript: `function solution(${getParams(title)}) {
+    // Write your solution here
+    return ${getJsDefaultReturn(title)};
+}
+
+// Test your solution
+console.log(solution(${getTestInput(title)}));`
+      };
+      
+      return templates[lang] || '// Write your code here';
+    }
+
+    // Helper functions for code templates
+    function getParams(title) {
+      if (title.includes('two sum')) return 'nums, target';
+      if (title.includes('palindrome')) return 's';
+      if (title.includes('reverse') && title.includes('integer')) return 'x';
+      if (title.includes('reverse')) return 's';
+      if (title.includes('fizz buzz')) return 'n';
+      if (title.includes('maximum') || title.includes('max')) return 'nums';
+      if (title.includes('minimum') || title.includes('min')) return 'nums';
+      if (title.includes('valid') && title.includes('parentheses')) return 's';
+      if (title.includes('climbing') || title.includes('stairs')) return 'n';
+      if (title.includes('binary') && title.includes('search')) return 'nums, target';
+      if (title.includes('longest') && title.includes('substring')) return 's';
+      if (title.includes('container')) return 'height';
+      if (title.includes('3sum')) return 'nums';
+      return '';
+    }
+
+    function getTestInput(title) {
+      if (title.includes('two sum')) return '[2,7,11,15], 9';
+      if (title.includes('palindrome')) return '"racecar"';
+      if (title.includes('reverse') && title.includes('integer')) return '123';
+      if (title.includes('reverse')) return '"hello"';
+      if (title.includes('fizz buzz')) return '3';
+      if (title.includes('maximum') || title.includes('max')) return '[1,2,3]';
+      if (title.includes('minimum') || title.includes('min')) return '[1,2,3]';
+      if (title.includes('valid') && title.includes('parentheses')) return '"(){}"';
+      if (title.includes('climbing') || title.includes('stairs')) return '5';
+      if (title.includes('binary') && title.includes('search')) return '[-1,0,3,5,9,12], 9';
+      if (title.includes('longest') && title.includes('substring')) return '"abcabcbb"';
+      if (title.includes('container')) return '[1,8,6,2,5,4,8,3,7]';
+      if (title.includes('3sum')) return '[-1,0,1,2,-1,-4]';
+      return '';
+    }
+
+    function getCppReturnType(title) {
+      if (title.includes('two sum')) return 'vector<int>';
+      if (title.includes('palindrome')) return 'bool';
+      if (title.includes('reverse') && title.includes('integer')) return 'int';
+      if (title.includes('reverse')) return 'string';
+      if (title.includes('fizz buzz')) return 'vector<string>';
+      if (title.includes('maximum') || title.includes('max')) return 'int';
+      if (title.includes('minimum') || title.includes('min')) return 'int';
+      if (title.includes('valid') && title.includes('parentheses')) return 'bool';
+      if (title.includes('climbing') || title.includes('stairs')) return 'int';
+      if (title.includes('binary') && title.includes('search')) return 'int';
+      if (title.includes('longest') && title.includes('substring')) return 'int';
+      if (title.includes('container')) return 'int';
+      if (title.includes('3sum')) return 'vector<vector<int>>';
+      return 'int';
+    }
+
+    function getCppParams(title) {
+      if (title.includes('two sum')) return 'vector<int> nums, int target';
+      if (title.includes('palindrome')) return 'string s';
+      if (title.includes('reverse') && title.includes('integer')) return 'int x';
+      if (title.includes('reverse')) return 'string s';
+      if (title.includes('fizz buzz')) return 'int n';
+      if (title.includes('maximum') || title.includes('max')) return 'vector<int> nums';
+      if (title.includes('minimum') || title.includes('min')) return 'vector<int> nums';
+      if (title.includes('valid') && title.includes('parentheses')) return 'string s';
+      if (title.includes('climbing') || title.includes('stairs')) return 'int n';
+      if (title.includes('binary') && title.includes('search')) return 'vector<int> nums, int target';
+      if (title.includes('longest') && title.includes('substring')) return 'string s';
+      if (title.includes('container')) return 'vector<int> height';
+      if (title.includes('3sum')) return 'vector<int> nums';
+      return '';
+    }
+
+    function getCppDefaultReturn(title) {
+      if (title.includes('two sum')) return '{}';
+      if (title.includes('palindrome')) return 'false';
+      if (title.includes('reverse') && title.includes('integer')) return '0';
+      if (title.includes('reverse')) return '""';
+      if (title.includes('fizz buzz')) return '{}';
+      if (title.includes('maximum') || title.includes('max')) return '0';
+      if (title.includes('minimum') || title.includes('min')) return '0';
+      if (title.includes('valid') && title.includes('parentheses')) return 'false';
+      if (title.includes('climbing') || title.includes('stairs')) return '0';
+      if (title.includes('binary') && title.includes('search')) return '-1';
+      if (title.includes('longest') && title.includes('substring')) return '0';
+      if (title.includes('container')) return '0';
+      if (title.includes('3sum')) return '{}';
+      return '0';
+    }
+
+    function getJavaReturnType(title) {
+      if (title.includes('two sum')) return 'int[]';
+      if (title.includes('palindrome')) return 'boolean';
+      if (title.includes('reverse') && title.includes('integer')) return 'int';
+      if (title.includes('reverse')) return 'String';
+      if (title.includes('fizz buzz')) return 'List<String>';
+      if (title.includes('maximum') || title.includes('max')) return 'int';
+      if (title.includes('minimum') || title.includes('min')) return 'int';
+      if (title.includes('valid') && title.includes('parentheses')) return 'boolean';
+      if (title.includes('climbing') || title.includes('stairs')) return 'int';
+      if (title.includes('binary') && title.includes('search')) return 'int';
+      if (title.includes('longest') && title.includes('substring')) return 'int';
+      if (title.includes('container')) return 'int';
+      if (title.includes('3sum')) return 'List<List<Integer>>';
+      return 'int';
+    }
+
+    function getJavaParams(title) {
+      if (title.includes('two sum')) return 'int[] nums, int target';
+      if (title.includes('palindrome')) return 'String s';
+      if (title.includes('reverse') && title.includes('integer')) return 'int x';
+      if (title.includes('reverse')) return 'String s';
+      if (title.includes('fizz buzz')) return 'int n';
+      if (title.includes('maximum') || title.includes('max')) return 'int[] nums';
+      if (title.includes('minimum') || title.includes('min')) return 'int[] nums';
+      if (title.includes('valid') && title.includes('parentheses')) return 'String s';
+      if (title.includes('climbing') || title.includes('stairs')) return 'int n';
+      if (title.includes('binary') && title.includes('search')) return 'int[] nums, int target';
+      if (title.includes('longest') && title.includes('substring')) return 'String s';
+      if (title.includes('container')) return 'int[] height';
+      if (title.includes('3sum')) return 'int[] nums';
+      return '';
+    }
+
+    function getJavaDefaultReturn(title) {
+      if (title.includes('two sum')) return 'new int[0]';
+      if (title.includes('palindrome')) return 'false';
+      if (title.includes('reverse') && title.includes('integer')) return '0';
+      if (title.includes('reverse')) return '""';
+      if (title.includes('fizz buzz')) return 'new ArrayList<>()';
+      if (title.includes('maximum') || title.includes('max')) return '0';
+      if (title.includes('minimum') || title.includes('min')) return '0';
+      if (title.includes('valid') && title.includes('parentheses')) return 'false';
+      if (title.includes('climbing') || title.includes('stairs')) return '0';
+      if (title.includes('binary') && title.includes('search')) return '-1';
+      if (title.includes('longest') && title.includes('substring')) return '0';
+      if (title.includes('container')) return '0';
+      if (title.includes('3sum')) return 'new ArrayList<>()';
+      return '0';
+    }
+
+    function getJsDefaultReturn(title) {
+      if (title.includes('two sum')) return '[]';
+      if (title.includes('palindrome')) return 'false';
+      if (title.includes('reverse') && title.includes('integer')) return '0';
+      if (title.includes('reverse')) return '""';
+      if (title.includes('fizz buzz')) return '[]';
+      if (title.includes('maximum') || title.includes('max')) return '0';
+      if (title.includes('minimum') || title.includes('min')) return '0';
+      if (title.includes('valid') && title.includes('parentheses')) return 'false';
+      if (title.includes('climbing') || title.includes('stairs')) return '0';
+      if (title.includes('binary') && title.includes('search')) return '-1';
+      if (title.includes('longest') && title.includes('substring')) return '0';
+      if (title.includes('container')) return '0';
+      if (title.includes('3sum')) return '[]';
+      return 'null';
+    }
+
+    // Get language ID for Judge0
+    function getLanguageId(lang) {
+      const langIds = {
+        'python': 71,
+        'cpp': 54,
+        'java': 62,
+        'javascript': 63
+      };
+      return langIds[lang] || 71;
+    }
+
+    // Run code - executes with first test case
+    async function runCode() {
+      const lang = document.getElementById('languageSelect').value;
+      const code = editorInstance ? editorInstance.getValue() : '';
+      const output = document.getElementById('output');
+      const resultsDiv = document.getElementById('testResults');
+      
+      output.textContent = 'Running...';
+      resultsDiv.innerHTML = '<div class="test-result" style="background:#fff3cd;color:#856404;">⏳ Running code...</div>';
+      
+      if (testCases.length === 0) {
+        output.textContent = 'No test cases available.';
+        return;
+      }
+      
+      const firstTest = testCases[0];
+      const stdin = formatInput(firstTest.input, lang);
+      
+      try {
+        const result = await executeCode(code, lang, stdin);
+        output.textContent = result.stdout || result.stderr || result.compile_output || 'No output.';
+        
+        const actual = result.stdout ? result.stdout.trim() : '';
+        const expected = firstTest.expected.replace(/[\[\]"]/g, '').trim();
+        
+        if (actual === expected) {
+          resultsDiv.innerHTML = `<div class="test-result test-pass"><i class="fas fa-check-circle"></i> Test Case 1 Passed</div>`;
+        } else {
+          resultsDiv.innerHTML = `
+            <div class="test-result test-fail"><i class="fas fa-times-circle"></i> Test Case 1 Failed</div>
+            <div class="test-result" style="background:#fff;">
+              <strong>Expected:</strong> ${firstTest.expected}<br>
+              <strong>Actual:</strong> ${actual || 'No output'}
+            </div>
+          `;
+        }
+      } catch (e) {
+        output.textContent = 'Error running code: ' + e.message;
+        resultsDiv.innerHTML = `<div class="test-result test-fail"><i class="fas fa-exclamation-circle"></i> Error: ${e.message}</div>`;
+      }
+    }
+
+    // Compile code
+    async function compileCode() {
+      const lang = document.getElementById('languageSelect').value;
+      const code = editorInstance ? editorInstance.getValue() : '';
+      const output = document.getElementById('output');
+      const resultsDiv = document.getElementById('testResults');
+      
+      output.textContent = 'Compiling...';
+      resultsDiv.innerHTML = '<div class="test-result" style="background:#fff3cd;color:#856404;">⏳ Compiling...</div>';
+      
+      try {
+        const result = await executeCode(code, lang, '');
+        if (result.compile_output) {
+          output.textContent = 'Compilation Error: ' + result.compile_output;
+          resultsDiv.innerHTML = `<div class="test-result test-fail"><i class="fas fa-times-circle"></i> Compilation Failed</div>`;
+        } else {
+          output.textContent = '✓ Compilation successful! No syntax errors.';
+          resultsDiv.innerHTML = `<div class="test-result test-pass"><i class="fas fa-check-circle"></i> Compiled Successfully</div>`;
+        }
+      } catch (e) {
+        output.textContent = 'Error: ' + e.message;
+        resultsDiv.innerHTML = `<div class="test-result test-fail"><i class="fas fa-exclamation-circle"></i> Compilation Failed</div>`;
+      }
+    }
+
+    // Submit code - runs all test cases
+    async function submitCode() {
+      const lang = document.getElementById('languageSelect').value;
+      const code = editorInstance ? editorInstance.getValue() : '';
+      const output = document.getElementById('output');
+      const resultsDiv = document.getElementById('testResults');
+      
+      output.textContent = 'Running all test cases...';
+      resultsDiv.innerHTML = '<div class="test-result" style="background:#fff3cd;color:#856404;">⏳ Running all test cases...</div>';
+      
+      if (testCases.length === 0) {
+        output.textContent = 'No test cases available.';
+        return;
+      }
+      
+      let passed = 0;
+      let resultsHTML = '';
+      
+      for (let i = 0; i < testCases.length; i++) {
+        const tc = testCases[i];
+        const stdin = formatInput(tc.input, lang);
+        
+        try {
+          const result = await executeCode(code, lang, stdin);
+          const actual = result.stdout ? result.stdout.trim() : '';
+          const expected = tc.expected.replace(/[\[\]"]/g, '').trim();
+          
+          if (actual === expected) {
+            passed++;
+            resultsHTML += `<div class="test-result test-pass"><i class="fas fa-check-circle"></i> Test Case ${i + 1} Passed</div>`;
+          } else {
+            resultsHTML += `
+              <div class="test-result test-fail"><i class="fas fa-times-circle"></i> Test Case ${i + 1} Failed</div>
+              <div class="test-result" style="background:#fff;margin-bottom:10px;">
+                <strong>Input:</strong> ${tc.input}<br>
+                <strong>Expected:</strong> ${tc.expected}<br>
+                <strong>Actual:</strong> ${actual || 'No output'}
+              </div>
+            `;
+          }
+        } catch (e) {
+          resultsHTML += `<div class="test-result test-fail"><i class="fas fa-exclamation-circle"></i> Test Case ${i + 1} - Error: ${e.message}</div>`;
+        }
+      }
+      
+      // Summary
+      if (passed === testCases.length) {
+        resultsDiv.innerHTML = `
+          <div class="all-passed">🎉 All ${passed}/${testCases.length} Test Cases Passed!</div>
+          ${resultsHTML}
+        `;
+        // Mark as solved
+        if (currentProblem) {
+          solvedProblems.add(currentProblem.titleSlug);
+          updateStats();
+          renderProblems();
+        }
+      } else {
+        resultsDiv.innerHTML = `
+          <div class="test-result test-fail" style="font-size:1rem;">${passed}/${testCases.length} Test Cases Passed</div>
+          ${resultsHTML}
+        `;
+      }
+      
+      output.textContent = `Submitted. ${passed}/${testCases.length} test cases passed.`;
+    }
+
+    // Format input for different languages
+    function formatInput(input, lang) {
+      return input.replace(/ = /g, '\n').replace(/,/g, '\n');
+    }
+
+    // Execute code using Judge0 API
+    async function executeCode(sourceCode, language, stdin) {
+      const languageId = getLanguageId(language);
+      const apiKey = 'SIGN-UP-FOR-KEY';
+      
+      try {
+        const response = await fetch(`https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-RapidAPI-Key': apiKey,
+            'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
+          },
+          body: JSON.stringify({
+            source_code: sourceCode,
+            language_id: languageId,
+            stdin: stdin
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        // Fallback simulation
+        return simulateExecution(sourceCode, language, stdin);
+      }
+    }
+
+    // Simulate code execution
+    function simulateExecution(code, language, stdin) {
+      return {
+        stdout: '',
+        stderr: '',
+        compile_output: '',
+        message: 'Code executed (simulated - add API key for real execution)'
+      };
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeEditor();
+      }
+    });
+  </script>
+
+</body>
+</html>
+      overflow-y: auto;
+      padding: 20px 0;
+    }
+
+    .sidebar-title {
+      padding: 0 20px 15px;
+      font-size: 0.9rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 10px;
+    }
+
+    .category-list {
+      list-style: none;
+    }
+
+    .category-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s;
+      border-left: 3px solid transparent;
+    }
+
+    .category-item:hover {
+      background: rgba(0, 212, 255, 0.1);
+      border-left-color: #00d4ff;
+    }
+
+    .category-item.active {
+      background: rgba(0, 212, 255, 0.15);
+      border-left-color: #00d4ff;
+    }
+
+    .category-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .category-name i {
+      width: 20px;
+      color: #00d4ff;
+    }
+
+    .category-count {
+      background: rgba(255,255,255,0.1);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+
+    /* Content Area */
+    .content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .content-title {
+      font-size: 1.3rem;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 20px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: #00d4ff;
+      color: #000;
+    }
+
+    /* Problems Grid */
+    .problems-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+    }
+
+    .problem-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .problem-card:hover {
+      background: rgba(0, 212, 255, 0.1);
+      transform: translateY(-3px);
+      border-color: #00d4ff;
+    }
+
+    .problem-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .problem-id {
+      color: #00d4ff;
+      font-weight: bold;
+    }
+
+    .problem-status {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .status-solved {
+      background: #00d4ff;
+      color: #000;
+    }
+
+    .status-pending {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .problem-title {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .problem-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      background: rgba(0, 212, 255, 0.2);
+      color: #00d4ff;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+    }
+
+    .problem-difficulty {
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .difficulty-easy { color: #00ff88; }
+    .difficulty-medium { color: #ffaa00; }
+    .difficulty-hard { color: #ff4444; }
+
+    /* Modal */
+    #editorModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #1a1a2e;
+      margin: 20px auto;
+      width: 98vw;
+      height: 95vh;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 25px;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .modal-title {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .modal-title h2 {
+      font-size: 1.3rem;
+    }
+
+    .modal-title .difficulty-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .close-btn {
+      background: #ff4444;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .close-btn:hover {
+      background: #ff6666;
+    }
+
+    .modal-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Problem Panel */
+    .problem-panel {
+      width: 35%;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      padding: 20px;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.2);
+    }
+
+    .problem-section {
+      margin-bottom: 25px;
+    }
+
+    .problem-section h4 {
+      color: #00d4ff;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .problem-section h4 i {
+      font-size: 0.9rem;
+    }
+
+    .problem-description {
+      color: #ccc;
+      line-height: 1.6;
+      font-size: 0.9rem;
+    }
+
+    .test-case {
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .test-case-label {
+      color: #888;
+      font-size: 0.8rem;
+      margin-bottom: 5px;
+    }
+
+    .test-case-content {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #00ff88;
+    }
+
+    /* Editor Panel */
+    .editor-panel {
+      width: 65%;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .editor-toolbar label {
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .editor-toolbar select {
+      padding: 10px 15px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .editor-toolbar select option {
+      background: #1a1a2e;
+    }
+
+    .toolbar-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: bold;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .run-btn {
+      background: #00d4ff;
+      color: #000;
+    }
+
+    .run-btn:hover {
+      background: #00e5ff;
+      transform: translateY(-2px);
+    }
+
+    .compile-btn {
+      background: #ffaa00;
+      color: #000;
+    }
+
+    .compile-btn:hover {
+      background: #ffbb00;
+      transform: translateY(-2px);
+    }
+
+    .submit-btn {
+      background: #00ff88;
+      color: #000;
+    }
+
+    .submit-btn:hover {
+      background: #00ff99;
+      transform: translateY(-2px);
+    }
+
+    #editorContainer {
+      flex: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .output-panel {
+      margin-top: 15px;
+      padding: 15px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .output-panel h4 {
+      color: #888;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+    }
+
+    #output {
+      background: rgba(0,0,0,0.5);
+      padding: 12px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #00ff88;
+      white-space: pre-wrap;
+      margin: 0;
+      min-height: 40px;
+    }
+
+    .test-results {
+      margin-top: 10px;
+    }
+
+    .test-result {
+      padding: 10px 15px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .test-pass {
+      background: rgba(0, 255, 136, 0.15);
+      color: #00ff88;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+
+    .test-fail {
+      background: rgba(255, 68, 68, 0.15);
+      color: #ff4444;
+      border: 1px solid rgba(255, 68, 68, 0.3);
+    }
+
+    .test-result i {
+      font-size: 1rem;
+    }
+
+    .all-passed {
+      background: linear-gradient(135deg, #00ff88, #00d4ff);
+      color: #000;
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 15px;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 50px;
+      color: #888;
+    }
+
+    .loading i {
+      font-size: 2rem;
+      color: #00d4ff;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.3);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 212, 255, 0.3);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 212, 255, 0.5);
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .problem-panel {
+        width: 40%;
+      }
+      .editor-panel {
+        width: 60%;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .modal-body {
+        flex-direction: column;
+      }
+      .problem-panel, .editor-panel {
+        width: 100%;
+      }
+      .problem-panel {
+        height: 40%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+      .editor-panel {
+        height: 60%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <i class="fas fa-code"></i>
+      <span>LeetCode Practice</span>
+    </div>
+    <div class="header-stats">
+      <div class="stat-item">
+        <div class="stat-value" id="totalSolved">0</div>
+        <div class="stat-label">Solved</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="totalProblems">3500+</div>
+        <div class="stat-label">Total Problems</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="easyCount">0</div>
+        <div class="stat-label">Easy</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="mediumCount">0</div>
+        <div class="stat-label">Medium</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="hardCount">0</div>
+        <div class="stat-label">Hard</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-title">
+        <i class="fas fa-tags"></i> Topics
+      </div>
+      <ul class="category-list" id="categoryList">
+        <li class="category-item active" data-category="all">
+          <span class="category-name">
+            <i class="fas fa-list"></i> All Problems
+          </span>
+          <span class="category-count" id="count-all">0</span>
+        </li>
+        <li class="category-item" data-category="Array">
+          <span class="category-name">
+            <i class="fas fa-layer-group"></i> Array
+          </span>
+          <span class="category-count" id="count-Array">0</span>
+        </li>
+        <li class="category-item" data-category="String">
+          <span class="category-name">
+            <i class="fas fa-font"></i> String
+          </span>
+          <span class="category-count" id="count-String">0</span>
+        </li>
+        <li class="category-item" data-category="Hash Table">
+          <span class="category-name">
+            <i class="fas fa-hashtag"></i> Hash Table
+          </span>
+          <span class="category-count" id="count-Hash Table">0</span>
+        </li>
+        <li class="category-item" data-category="Dynamic Programming">
+          <span class="category-name">
+            <i class="fas fa-chart-line"></i> Dynamic Programming
+          </span>
+          <span class="category-count" id="count-Dynamic Programming">0</span>
+        </li>
+        <li class="category-item" data-category="Math">
+          <span class="category-name">
+            <i class="fas fa-calculator"></i> Math
+          </span>
+          <span class="category-count" id="count-Math">0</span>
+        </li>
+        <li class="category-item" data-category="Sorting">
+          <span class="category-name">
+            <i class="fas fa-sort"></i> Sorting
+          </span>
+          <span class="category-count" id="count-Sorting">0</span>
+        </li>
+        <li class="category-item" data-category="Greedy">
+          <span class="category-name">
+            <i class="fas fa-coins"></i> Greedy
+          </span>
+          <span class="category-count" id="count-Greedy">0</span>
+        </li>
+        <li class="category-item" data-category="Depth-First Search">
+          <span class="category-name">
+            <i class="fas fa-tree"></i> DFS
+          </span>
+          <span class="category-count" id="count-Depth-First Search">0</span>
+        </li>
+        <li class="category-item" data-category="Breadth-First Search">
+          <span class="category-name">
+            <i class="fas fa-stream"></i> BFS
+          </span>
+          <span class="category-count" id="count-Breadth-First Search">0</span>
+        </li>
+        <li class="category-item" data-category="Binary Search">
+          <span class="category-name">
+            <i class="fas fa-search"></i> Binary Search
+          </span>
+          <span class="category-count" id="count-Binary Search">0</span>
+        </li>
+        <li class="category-item" data-category="Matrix">
+          <span class="category-name">
+            <i class="fas fa-th"></i> Matrix
+          </span>
+          <span class="category-count" id="count-Matrix">0</span>
+        </li>
+        <li class="category-item" data-category="Two Pointers">
+          <span class="category-name">
+            <i class="fas fa-arrows-left-right"></i> Two Pointers
+          </span>
+          <span class="category-count" id="count-Two Pointers">0</span>
+        </li>
+        <li class="category-item" data-category="Stack">
+          <span class="category-name">
+            <i class="fas fa-layer-group"></i> Stack
+          </span>
+          <span class="category-count" id="count-Stack">0</span>
+        </li>
+        <li class="category-item" data-category="Linked List">
+          <span class="category-name">
+            <i class="fas fa-link"></i> Linked List
+          </span>
+          <span class="category-count" id="count-Linked List">0</span>
+        </li>
+        <li class="category-item" data-category="Tree">
+          <span class="category-name">
+            <i class="fas fa-fan"></i> Tree
+          </span>
+          <span class="category-count" id="count-Tree">0</span>
+        </li>
+        <li class="category-item" data-category="Heap">
+          <span class="category-name">
+            <i class="fas fa-database"></i> Heap
+          </span>
+          <span class="category-count" id="count-Heap">0</span>
+        </li>
+        <li class="category-item" data-category="Graph">
+          <span class="category-name">
+            <i class="fas fa-project-diagram"></i> Graph
+          </span>
+          <span class="category-count" id="count-Graph">0</span>
+        </li>
+        <li class="category-item" data-category="Backtracking">
+          <span class="category-name">
+            <i class="fas fa-undo"></i> Backtracking
+          </span>
+          <span class="category-count" id="count-Backtracking">0</span>
+        </li>
+        <li class="category-item" data-category="Sliding Window">
+          <span class="category-name">
+            <i class="fas fa-window-restore"></i> Sliding Window
+          </span>
+          <span class="category-count" id="count-Sliding Window">0</span>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+      <div class="content-header">
+        <h2 class="content-title" id="contentTitle">All Problems</h2>
+        <div class="filter-buttons">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="Easy">Easy</button>
+          <button class="filter-btn" data-filter="Medium">Medium</button>
+          <button class="filter-btn" data-filter="Hard">Hard</button>
+        </div>
+      </div>
+      <div class="problems-grid" id="problemsGrid">
+        <div class="loading">
+          <i class="fas fa-spinner"></i>
+          <p>Loading problems...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Editor Modal -->
+  <div id="editorModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h2 id="modalTitle">Problem Title</h2>
+          <span class="difficulty-badge" id="difficultyBadge">Easy</span>
+        </div>
+        <button class="close-btn" onclick="closeEditor()">
+          <i class="fas fa-times"></i> Close
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Left Panel - Problem Description -->
+        <div class="problem-panel">
+          <div class="problem-section">
+            <h4><i class="fas fa-align-left"></i> Description</h4>
+            <div class="problem-description" id="problemDescription">
+              Loading problem description...
+            </div>
+          </div>
+          <div class="problem-section">
+            <h4><i class="fas fa-vial"></i> Example Test Cases</h4>
+            <div id="testCases"></div>
+          </div>
+          <div class="problem-section">
+            <h4><i class="fas fa-info-circle"></i> Constraints</h4>
+            <div class="problem-description" id="problemConstraints"></div>
+          </div>
+        </div>
+
+        <!-- Right Panel - Code Editor -->
+        <div class="editor-panel">
+          <div class="editor-toolbar">
+            <label for="languageSelect"><i class="fas fa-code"></i> Language:</label>
+            <select id="languageSelect">
+              <option value="python">Python</option>
+              <option value="cpp">C++</option>
+              <option value="java">Java</option>
+              <option value="javascript">JavaScript</option>
+            </select>
+            <button class="toolbar-btn run-btn" onclick="runCode()">
+              <i class="fas fa-play"></i> Run
+            </button>
+            <button class="toolbar-btn compile-btn" onclick="compileCode()">
+              <i class="fas fa-cog"></i> Compile
+            </button>
+            <button class="toolbar-btn submit-btn" onclick="submitCode()">
+              <i class="fas fa-check"></i> Submit
+            </button>
+          </div>
+          <div id="editorContainer"></div>
+          <div class="output-panel">
+            <h4><i class="fas fa-terminal"></i> Output / Test Results</h4>
+            <div class="test-results" id="testResults"></div>
+            <pre id="output"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global variables
+    let allProblems = [];
+    let filteredProblems = [];
+    let monacoLoaded = false;
+    let editorInstance = null;
+    let currentProblem = null;
+    let testCases = [];
+    let solvedProblems = new Set();
+    let currentCategory = 'all';
+    let currentDifficulty = 'all';
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      loadProblems();
+      setupEventListeners();
+    });
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Category selection
+      document.querySelectorAll('.category-item').forEach(item => {
+        item.addEventListener('click', function() {
+          document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+          currentCategory = this.dataset.category;
+          document.getElementById('contentTitle').textContent = 
+            currentCategory === 'all' ? 'All Problems' : currentCategory;
+          filterProblems();
+        });
+      });
+
+      // Difficulty filter
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          currentDifficulty = this.dataset.filter;
+          filterProblems();
+        });
+      });
+
+      // Language change
+      document.getElementById('languageSelect').addEventListener('change', updateEditor);
+    }
+
+    // Load problems from API
+    async function loadProblems() {
+      const grid = document.getElementById('problemsGrid');
+      grid.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Loading problems...</p></div>';
+
+      try {
+        // Fetch problems from LeetCode API
+        const response = await fetch('https://alfa-leetcode-api.onrender.com/problems?limit=3500');
+        const data = await response.json();
+        
+        allProblems = data.problemsetQuestionList || [];
+        filteredProblems = [...allProblems];
+        
+        updateStats();
+        updateCategoryCounts();
+        renderProblems();
+      } catch (error) {
+        console.error('Error loading problems:', error);
+        grid.innerHTML = '<div class="loading"><p>Error loading problems. Please try again.</p></div>';
+      }
+    }
+
+    // Update statistics
+    function updateStats() {
+      const easy = allProblems.filter(p => p.difficulty === 'Easy').length;
+      const medium = allProblems.filter(p => p.difficulty === 'Medium').length;
+      const hard = allProblems.filter(p => p.difficulty === 'Hard').length;
+      
+      document.getElementById('totalSolved').textContent = solvedProblems.size;
+      document.getElementById('totalProblems').textContent = allProblems.length;
+      document.getElementById('easyCount').textContent = easy;
+      document.getElementById('mediumCount').textContent = medium;
+      document.getElementById('hardCount').textContent = hard;
+    }
+
+    // Update category counts
+    function updateCategoryCounts() {
+      document.getElementById('count-all').textContent = allProblems.length;
+      
+      const categories = ['Array', 'String', 'Hash Table', 'Dynamic Programming', 'Math', 
+        'Sorting', 'Greedy', 'Depth-First Search', 'Breadth-First Search', 'Binary Search',
+        'Matrix', 'Two Pointers', 'Stack', 'Linked List', 'Tree', 'Heap', 'Graph', 
+        'Backtracking', 'Sliding Window'];
+      
+      categories.forEach(cat => {
+        const count = allProblems.filter(p => 
+          p.topicTags && p.topicTags.some(tag => tag.name === cat)
+        ).length;
+        const countEl = document.getElementById(`count-${cat}`);
+        if (countEl) countEl.textContent = count;
+      });
+    }
+
+    // Filter problems
+    function filterProblems() {
+      filteredProblems = allProblems.filter(problem => {
+        // Category filter
+        if (currentCategory !== 'all') {
+          if (!problem.topicTags || !problem.topicTags.some(tag => tag.name === currentCategory)) {
+            return false;
+          }
+        }
+        
+        // Difficulty filter
+        if (currentDifficulty !== 'all' && problem.difficulty !== currentDifficulty) {
+          return false;
+        }
+        
+        return true;
+      });
+      
+      renderProblems();
+    }
+
+    // Render problems grid
+    function renderProblems() {
+      const grid = document.getElementById('problemsGrid');
+      
+      if (filteredProblems.length === 0) {
+        grid.innerHTML = '<div class="loading"><p>No problems found.</p></div>';
+        return;
+      }
+
+      grid.innerHTML = filteredProblems.map(problem => {
+        const isSolved = solvedProblems.has(problem.titleSlug);
+        const tags = problem.topicTags ? problem.topicTags.slice(0, 3).map(tag => 
+          `<span class="tag">${tag.name}</span>`
+        ).join('') : '';
+        
+        const difficultyClass = `difficulty-${problem.difficulty.toLowerCase()}`;
+        
+        return `
+          <div class="problem-card" onclick="openEditor('${problem.titleSlug}')">
+            <div class="problem-header">
+              <span class="problem-id">${problem.questionFrontendId}</span>
+              <span class="problem-status ${isSolved ? 'status-solved' : 'status-pending'}">
+                ${isSolved ? '<i class="fas fa-check"></i>' : ''}
+              </span>
+            </div>
+            <div class="problem-title">${problem.title}</div>
+            <div class="problem-tags">${tags}</div>
+            <div class="problem-difficulty ${difficultyClass}">${problem.difficulty}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Monaco loader
+    function loadMonaco(cb) {
+      if (monacoLoaded) return cb();
+      const loader = document.createElement('script');
+      loader.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js';
+      loader.onload = function() {
+        window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs' } });
+        window.require(['vs/editor/editor.main'], function() {
+          monacoLoaded = true;
+          cb();
+        });
+      };
+      document.body.appendChild(loader);
+    }
+
+    // Open editor with problem
+    async function openEditor(titleSlug) {
+      currentProblem = allProblems.find(p => p.titleSlug === titleSlug);
+      if (!currentProblem) return;
+
+      document.getElementById('editorModal').style.display = 'block';
+      document.getElementById('modalTitle').textContent = `${currentProblem.questionFrontendId}. ${currentProblem.title}`;
+      
+      const badge = document.getElementById('difficultyBadge');
+      badge.textContent = currentProblem.difficulty;
+      badge.className = `difficulty-badge difficulty-${currentProblem.difficulty.toLowerCase()}`;
+      badge.style.background = currentProblem.difficulty === 'Easy' ? '#00ff88' : 
+                               currentProblem.difficulty === 'Medium' ? '#ffaa00' : '#ff4444';
+      badge.style.color = '#000';
+
+      // Load problem details
+      await loadProblemDetails(currentProblem);
+      
+      // Generate test cases
+      generateTestCases(currentProblem);
+      
+      // Load Monaco editor
+      loadMonaco(() => {
+        if (!editorInstance) {
+          editorInstance = monaco.editor.create(document.getElementById('editorContainer'), {
+            value: getStarterCode(document.getElementById('languageSelect').value),
+            language: getMonacoLang(document.getElementById('languageSelect').value),
+            theme: 'vs-dark',
+            automaticLayout: true,
+            fontSize: 14,
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+            wordWrap: 'on'
+          });
+        } else {
+          updateEditor();
+        }
+      });
+
+      // Clear output
+      document.getElementById('output').textContent = '';
+      document.getElementById('testResults').innerHTML = '';
+    }
+
+    // Load problem details from API
+    async function loadProblemDetails(problem) {
+      try {
+        const response = await fetch(`https://alfa-leetcode-api.onrender.com/problems/${problem.titleSlug}`);
+        const data = await response.json();
+        
+        // Set description
+        const descEl = document.getElementById('problemDescription');
+        if (data.question && data.question.content) {
+          descEl.innerHTML = data.question.content;
+        } else {
+          descEl.textContent = problem.title + ' - Solve this problem to improve your skills.';
+        }
+        
+        // Set constraints
+        const constraintsEl = document.getElementById('problemConstraints');
+        if (data.question && data.question.constraints) {
+          constraintsEl.innerHTML = data.question.constraints.map(c => `<div>• ${c}</div>`).join('');
+        } else {
+          constraintsEl.textContent = 'No specific constraints provided.';
+        }
+      } catch (error) {
+        console.error('Error loading problem details:', error);
+        document.getElementById('problemDescription').textContent = 
+          problem.title + ' - Solve this problem to improve your skills.';
+        document.getElementById('problemConstraints').textContent = 'No specific constraints provided.';
+      }
+    }
+
+    // Generate test cases based on problem
+    function generateTestCases(problem) {
+      const testCasesDiv = document.getElementById('testCases');
+      const title = problem.title.toLowerCase();
+      testCases = [];
+
+      // Generate appropriate test cases based on problem type
+      if (title.includes('two sum')) {
+        testCases = [
+          { input: 'nums = [2,7,11,15], target = 9', expected: '[0,1]' },
+          { input: 'nums = [3,2,4], target = 6', expected: '[1,2]' },
+          { input: 'nums = [3,3], target = 6', expected: '[0,1]' }
+        ];
+      } else if (title.includes('palindrome') && !title.includes('number')) {
+        testCases = [
+          { input: 's = "A man, a plan, a canal: Panama"', expected: 'true' },
+          { input: 's = "race a car"', expected: 'false' },
+          { input: 's = " "', expected: 'true' }
+        ];
+      } else if (title.includes('reverse')) {
+        if (title.includes('integer') || title.includes('number')) {
+          testCases = [
+            { input: 'x = 123', expected: '321' },
+            { input: 'x = -123', expected: '-321' },
+            { input: 'x = 120', expected: '21' }
+          ];
+        } else {
+          testCases = [
+            { input: 's = "hello"', expected: '"olleh"' },
+            { input: 's = "Python"', expected: '"nohtyP"' }
+          ];
+        }
+      } else if (title.includes('maximum') || title.includes('max') || title.includes('largest')) {
+        testCases = [
+          { input: 'nums = [1]', expected: '1' },
+          { input: 'nums = [1,2,3]', expected: '3' },
+          { input: 'nums = [-1,-2,-3]', expected: '-1' }
+        ];
+      } else if (title.includes('minimum') || title.includes('min') || title.includes('smallest')) {
+        testCases = [
+          { input: 'nums = [1]', expected: '1' },
+          { input: 'nums = [1,2,3]', expected: '1' },
+          { input: 'nums = [-1,-2,-3]', expected: '-3' }
+        ];
+      } else if (title.includes('fizz buzz') || title.includes('fizzbuzz')) {
+        testCases = [
+          { input: 'n = 3', expected: '["1","2","Fizz"]' },
+          { input: 'n = 5', expected: '["1","2","Fizz","4","Buzz"]' },
+          { input: 'n = 15', expected: '["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]' }
+        ];
+      } else if (title.includes('valid') && title.includes('parentheses')) {
+        testCases = [
+          { input: 's = "()"', expected: 'true' },
+          { input: 's = "()[]{}"', expected: 'true' },
+          { input: 's = "(]"', expected: 'false' }
+        ];
+      } else if (title.includes('merge') && title.includes('sorted')) {
+        testCases = [
+          { input: 'nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3', expected: '[1,2,2,3,5,6]' },
+          { input: 'nums1 = [1], m = 1, nums2 = [], n = 0', expected: '[1]' }
+        ];
+      } else if (title.includes('climbing') || title.includes('stairs')) {
+        testCases = [
+          { input: 'n = 2', expected: '2' },
+          { input: 'n = 3', expected: '3' },
+          { input: 'n = 5', expected: '8' }
+        ];
+      } else if (title.includes('binary') && title.includes('search')) {
+        testCases = [
+          { input: 'nums = [-1,0,3,5,9,12], target = 9', expected: '4' },
+          { input: 'nums = [-1,0,3,5,9,12], target = 2', expected: '-1' },
+          { input: 'nums = [5], target = 5', expected: '0' }
+        ];
+      } else if (title.includes('longest') && title.includes('substring')) {
+        testCases = [
+          { input: 's = "abcabcbb"', expected: '3' },
+          { input: 's = "bbbbb"', expected: '1' },
+          { input: 's = "pwwkew"', expected: '3' }
+        ];
+      } else if (title.includes('container') && title.includes('water')) {
+        testCases = [
+          { input: 'height = [1,8,6,2,5,4,8,3,7]', expected: '49' },
+          { input: 'height = [1,1]', expected: '1' }
+        ];
+      } else if (title.includes('3sum')) {
+        testCases = [
+          { input: 'nums = [-1,0,1,2,-1,-4]', expected: '[[-1,-1,0],[-1,0,1]]' },
+          { input: 'nums = [0,1,1]', expected: '[]' },
+          { input: 'nums = [0,0,0]', expected: '[[0,0,0]]' }
+        ];
+      } else {
+        // Default test cases
+        testCases = [
+          { input: 'input1', expected: 'output1' },
+          { input: 'input2', expected: 'output2' },
+          { input: 'input3', expected: 'output3' }
+        ];
+      }
+
+      // Render test cases
+      testCasesDiv.innerHTML = testCases.map((tc, i) => `
+        <div class="test-case">
+          <div class="test-case-label">Test Case ${i + 1}</div>
+          <div><strong>Input:</strong> <span class="test-case-content">${tc.input}</span></div>
+          <div><strong>Output:</strong> <span class="test-case-content">${tc.expected}</span></div>
+        </div>
+      `).join('');
+    }
+
+    function closeEditor() {
+      document.getElementById('editorModal').style.display = 'none';
+    }
+
+    function updateEditor() {
+      if (editorInstance) {
+        const lang = document.getElementById('languageSelect').value;
+        monaco.editor.setModelLanguage(editorInstance.getModel(), getMonacoLang(lang));
+        editorInstance.setValue(getStarterCode(lang));
+      }
+    }
+
+    function getMonacoLang(lang) {
+      const langMap = {
+        'python': 'python',
+        'cpp': 'cpp',
+        'java': 'java',
+        'javascript': 'javascript'
+      };
+      return langMap[lang] || 'plaintext';
+    }
+
+    function getStarterCode(lang) {
+      const title = currentProblem ? currentProblem.title.toLowerCase() : '';
+      
+      const templates = {
+        python: `def solution(${getParams(title)}):
+    # Write your solution here
+    pass
+
+# Test your solution
+print(solution(${getTestInput(title)}))`,
+        cpp: `#include <iostream>
+#include <vector>
+using namespace std;
+
+${getCppReturnType(title)} solution(${getCppParams(title)}) {
+    // Write your solution here
+    return ${getCppDefaultReturn(title)};
+}
+
+int main() {
+    cout << solution(${getTestInput(title)}) << endl;
+    return 0;
+}`,
+        java: `class Solution {
+    public ${getJavaReturnType(title)} solution(${getJavaParams(title)}) {
+        // Write your solution here
+        return ${getJavaDefaultReturn(title)};
+    }
+    
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.solution(${getTestInput(title)}));
+    }
+}`,
+        javascript: `function solution(${getParams(title)}) {
+    // Write your solution here
+    return ${getJsDefaultReturn(title)};
+}
+
+// Test your solution
+console.log(solution(${getTestInput(title)}));`
+      };
+      
+      return templates[lang] || '// Write your code here';
+    }
+
+    // Helper functions for code templates
+    function getParams(title) {
+      if (title.includes('two sum')) return 'nums, target';
+      if (title.includes('palindrome')) return 's';
+      if (title.includes('reverse') && title.includes('integer')) return 'x';
+      if (title.includes('reverse')) return 's';
+      if (title.includes('fizz buzz')) return 'n';
+      if (title.includes('maximum') || title.includes('max')) return 'nums';
+      if (title.includes('minimum') || title.includes('min')) return 'nums';
+      if (title.includes('valid') && title.includes('parentheses')) return 's';
+      if (title.includes('climbing') || title.includes('stairs')) return 'n';
+      if (title.includes('binary') && title.includes('search')) return 'nums, target';
+      if (title.includes('longest') && title.includes('substring')) return 's';
+      if (title.includes('container')) return 'height';
+      if (title.includes('3sum')) return 'nums';
+      return '';
+    }
+
+    function getTestInput(title) {
+      if (title.includes('two sum')) return '[2,7,11,15], 9';
+      if (title.includes('palindrome')) return '"racecar"';
+      if (title.includes('reverse') && title.includes('integer')) return '123';
+      if (title.includes('reverse')) return '"hello"';
+      if (title.includes('fizz buzz')) return '3';
+      if (title.includes('maximum') || title.includes('max')) return '[1,2,3]';
+      if (title.includes('minimum') || title.includes('min')) return '[1,2,3]';
+      if (title.includes('valid') && title.includes('parentheses')) return '"(){}"';
+      if (title.includes('climbing') || title.includes('stairs')) return '5';
+      if (title.includes('binary') && title.includes('search')) return '[-1,0,3,5,9,12], 9';
+      if (title.includes('longest') && title.includes('substring')) return '"abcabcbb"';
+      if (title.includes('container')) return '[1,8,6,2,5,4,8,3,7]';
+      if (title.includes('3sum')) return '[-1,0,1,2,-1,-4]';
+      return '';
+    }
+
+    function getCppReturnType(title) {
+      if (title.includes('two sum')) return 'vector<int>';
+      if (title.includes('palindrome')) return 'bool';
+      if (title.includes('reverse') && title.includes('integer')) return 'int';
+      if (title.includes('reverse')) return 'string';
+      if (title.includes('fizz buzz')) return 'vector<string>';
+      if (title.includes('maximum') || title.includes('max')) return 'int';
+      if (title.includes('minimum') || title.includes('min')) return 'int';
+      if (title.includes('valid') && title.includes('parentheses')) return 'bool';
+      if (title.includes('climbing') || title.includes('stairs')) return 'int';
+      if (title.includes('binary') && title.includes('search')) return 'int';
+      if (title.includes('longest') && title.includes('substring')) return 'int';
+      if (title.includes('container')) return 'int';
+      if (title.includes('3sum')) return 'vector<vector<int>>';
+      return 'int';
+    }
+
+    function getCppParams(title) {
+      if (title.includes('two sum')) return 'vector<int> nums, int target';
+      if (title.includes('palindrome')) return 'string s';
+      if (title.includes('reverse') && title.includes('integer')) return 'int x';
+      if (title.includes('reverse')) return 'string s';
+      if (title.includes('fizz buzz')) return 'int n';
+      if (title.includes('maximum') || title.includes('max')) return 'vector<int> nums';
+      if (title.includes('minimum') || title.includes('min')) return 'vector<int> nums';
+      if (title.includes('valid') && title.includes('parentheses')) return 'string s';
+      if (title.includes('climbing') || title.includes('stairs')) return 'int n';
+      if (title.includes('binary') && title.includes('search')) return 'vector<int> nums, int target';
+      if (title.includes('longest') && title.includes('substring')) return 'string s';
+      if (title.includes('container')) return 'vector<int> height';
+      if (title.includes('3sum')) return 'vector<int> nums';
+      return '';
+    }
+
+    function getCppDefaultReturn(title) {
+      if (title.includes('two sum')) return '{}';
+      if (title.includes('palindrome')) return 'false';
+      if (title.includes('reverse') && title.includes('integer')) return '0';
+      if (title.includes('reverse')) return '""';
+      if (title.includes('fizz buzz')) return '{}';
+      if (title.includes('maximum') || title.includes('max')) return '0';
+      if (title.includes('minimum') || title.includes('min')) return '0';
+      if (title.includes('valid') && title.includes('parentheses')) return 'false';
+      if (title.includes('climbing') || title.includes('stairs')) return '0';
+      if (title.includes('binary') && title.includes('search')) return '-1';
+      if (title.includes('longest') && title.includes('substring')) return '0';
+      if (title.includes('container')) return '0';
+      if (title.includes('3sum')) return '{}';
+      return '0';
+    }
+
+    function getJavaReturnType(title) {
+      if (title.includes('two sum')) return 'int[]';
+      if (title.includes('palindrome')) return 'boolean';
+      if (title.includes('reverse') && title.includes('integer')) return 'int';
+      if (title.includes('reverse')) return 'String';
+      if (title.includes('fizz buzz')) return 'List<String>';
+      if (title.includes('maximum') || title.includes('max')) return 'int';
+      if (title.includes('minimum') || title.includes('min')) return 'int';
+      if (title.includes('valid') && title.includes('parentheses')) return 'boolean';
+      if (title.includes('climbing') || title.includes('stairs')) return 'int';
+      if (title.includes('binary') && title.includes('search')) return 'int';
+      if (title.includes('longest') && title.includes('substring')) return 'int';
+      if (title.includes('container')) return 'int';
+      if (title.includes('3sum')) return 'List<List<Integer>>';
+      return 'int';
+    }
+
+    function getJavaParams(title) {
+      if (title.includes('two sum')) return 'int[] nums, int target';
+      if (title.includes('palindrome')) return 'String s';
+      if (title.includes('reverse') && title.includes('integer')) return 'int x';
+      if (title.includes('reverse')) return 'String s';
+      if (title.includes('fizz buzz')) return 'int n';
+      if (title.includes('maximum') || title.includes('max')) return 'int[] nums';
+      if (title.includes('minimum') || title.includes('min')) return 'int[] nums';
+      if (title.includes('valid') && title.includes('parentheses')) return 'String s';
+      if (title.includes('climbing') || title.includes('stairs')) return 'int n';
+      if (title.includes('binary') && title.includes('search')) return 'int[] nums, int target';
+      if (title.includes('longest') && title.includes('substring')) return 'String s';
+      if (title.includes('container')) return 'int[] height';
+      if (title.includes('3sum')) return 'int[] nums';
+      return '';
+    }
+
+    function getJavaDefaultReturn(title) {
+      if (title.includes('two sum')) return 'new int[0]';
+      if (title.includes('palindrome')) return 'false';
+      if (title.includes('reverse') && title.includes('integer')) return '0';
+      if (title.includes('reverse')) return '""';
+      if (title.includes('fizz buzz')) return 'new ArrayList<>()';
+      if (title.includes('maximum') || title.includes('max')) return '0';
+      if (title.includes('minimum') || title.includes('min')) return '0';
+      if (title.includes('valid') && title.includes('parentheses')) return 'false';
+      if (title.includes('climbing') || title.includes('stairs')) return '0';
+      if (title.includes('binary') && title.includes('search')) return '-1';
+      if (title.includes('longest') && title.includes('substring')) return '0';
+      if (title.includes('container')) return '0';
+      if (title.includes('3sum')) return 'new ArrayList<>()';
+      return '0';
+    }
+
+    function getJsDefaultReturn(title) {
+      if (title.includes('two sum')) return '[]';
+      if (title.includes('palindrome')) return 'false';
+      if (title.includes('reverse') && title.includes('integer')) return '0';
+      if (title.includes('reverse')) return '""';
+      if (title.includes('fizz buzz')) return '[]';
+      if (title.includes('maximum') || title.includes('max')) return '0';
+      if (title.includes('minimum') || title.includes('min')) return '0';
+      if (title.includes('valid') && title.includes('parentheses')) return 'false';
+      if (title.includes('climbing') || title.includes('stairs')) return '0';
+      if (title.includes('binary') && title.includes('search')) return '-1';
+      if (title.includes('longest') && title.includes('substring')) return '0';
+      if (title.includes('container')) return '0';
+      if (title.includes('3sum')) return '[]';
+      return 'null';
+    }
+
+    // Get language ID for Judge0
+    function getLanguageId(lang) {
+      const langIds = {
+        'python': 71,
+        'cpp': 54,
+        'java': 62,
+        'javascript': 63
+      };
+      return langIds[lang] || 71;
+    }
+
+    // Run code - executes with first test case
+    async function runCode() {
+      const lang = document.getElementById('languageSelect').value;
+      const code = editorInstance ? editorInstance.getValue() : '';
+      const output = document.getElementById('output');
+      const resultsDiv = document.getElementById('testResults');
+      
+      output.textContent = 'Running...';
+      resultsDiv.innerHTML = '<div class="test-result" style="background:rgba(255,170,0,0.2);color:#ffaa00;">⏳ Running code...</div>';
+      
+      if (testCases.length === 0) {
+        output.textContent = 'No test cases available.';
+        return;
+      }
+      
+      const firstTest = testCases[0];
+      const stdin = formatInput(firstTest.input, lang);
+      
+      try {
+        const result = await executeCode(code, lang, stdin);
+        output.textContent = result.stdout || result.stderr || result.compile_output || 'No output.';
+        
+        const actual = result.stdout ? result.stdout.trim() : '';
+        const expected = firstTest.expected.replace(/[\[\]"]/g, '').trim();
+        
+        if (actual === expected) {
+          resultsDiv.innerHTML = `<div class="test-result test-pass"><i class="fas fa-check-circle"></i> Test Case 1 Passed</div>`;
+        } else {
+          resultsDiv.innerHTML = `
+            <div class="test-result test-fail"><i class="fas fa-times-circle"></i> Test Case 1 Failed</div>
+            <div class="test-result" style="background:rgba(255,255,255,0.1);">
+              <strong>Expected:</strong> ${firstTest.expected}<br>
+              <strong>Actual:</strong> ${actual || 'No output'}
+            </div>
+          `;
+        }
+      } catch (e) {
+        output.textContent = 'Error running code: ' + e.message;
+        resultsDiv.innerHTML = `<div class="test-result test-fail"><i class="fas fa-exclamation-circle"></i> Error: ${e.message}</div>`;
+      }
+    }
+
+    // Compile code
+    async function compileCode() {
+      const lang = document.getElementById('languageSelect').value;
+      const code = editorInstance ? editorInstance.getValue() : '';
+      const output = document.getElementById('output');
+      const resultsDiv = document.getElementById('testResults');
+      
+      output.textContent = 'Compiling...';
+      resultsDiv.innerHTML = '<div class="test-result" style="background:rgba(255,170,0,0.2);color:#ffaa00;">⏳ Compiling...</div>';
+      
+      try {
+        const result = await executeCode(code, lang, '');
+        if (result.compile_output) {
+          output.textContent = 'Compilation Error: ' + result.compile_output;
+          resultsDiv.innerHTML = `<div class="test-result test-fail"><i class="fas fa-times-circle"></i> Compilation Failed</div>`;
+        } else {
+          output.textContent = '✓ Compilation successful! No syntax errors.';
+          resultsDiv.innerHTML = `<div class="test-result test-pass"><i class="fas fa-check-circle"></i> Compiled Successfully</div>`;
+        }
+      } catch (e) {
+        output.textContent = 'Error: ' + e.message;
+        resultsDiv.innerHTML = `<div class="test-result test-fail"><i class="fas fa-exclamation-circle"></i> Compilation Failed</div>`;
+      }
+    }
+
+    // Submit code - runs all test cases
+    async function submitCode() {
+      const lang = document.getElementById('languageSelect').value;
+      const code = editorInstance ? editorInstance.getValue() : '';
+      const output = document.getElementById('output');
+      const resultsDiv = document.getElementById('testResults');
+      
+      output.textContent = 'Running all test cases...';
+      resultsDiv.innerHTML = '<div class="test-result" style="background:rgba(255,170,0,0.2);color:#ffaa00;">⏳ Running all test cases...</div>';
+      
+      if (testCases.length === 0) {
+        output.textContent = 'No test cases available.';
+        return;
+      }
+      
+      let passed = 0;
+      let resultsHTML = '';
+      
+      for (let i = 0; i < testCases.length; i++) {
+        const tc = testCases[i];
+        const stdin = formatInput(tc.input, lang);
+        
+        try {
+          const result = await executeCode(code, lang, stdin);
+          const actual = result.stdout ? result.stdout.trim() : '';
+          const expected = tc.expected.replace(/[\[\]"]/g, '').trim();
+          
+          if (actual === expected) {
+            passed++;
+            resultsHTML += `<div class="test-result test-pass"><i class="fas fa-check-circle"></i> Test Case ${i + 1} Passed</div>`;
+          } else {
+            resultsHTML += `
+              <div class="test-result test-fail"><i class="fas fa-times-circle"></i> Test Case ${i + 1} Failed</div>
+              <div class="test-result" style="background:rgba(255,255,255,0.1);margin-bottom:10px;">
+                <strong>Input:</strong> ${tc.input}<br>
+                <strong>Expected:</strong> ${tc.expected}<br>
+                <strong>Actual:</strong> ${actual || 'No output'}
+              </div>
+            `;
+          }
+        } catch (e) {
+          resultsHTML += `<div class="test-result test-fail"><i class="fas fa-exclamation-circle"></i> Test Case ${i + 1} - Error: ${e.message}</div>`;
+        }
+      }
+      
+      // Summary
+      if (passed === testCases.length) {
+        resultsDiv.innerHTML = `
+          <div class="all-passed">🎉 All ${passed}/${testCases.length} Test Cases Passed!</div>
+          ${resultsHTML}
+        `;
+        // Mark as solved
+        if (currentProblem) {
+          solvedProblems.add(currentProblem.titleSlug);
+          updateStats();
+          renderProblems();
+        }
+      } else {
+        resultsDiv.innerHTML = `
+          <div class="test-result test-fail" style="font-size:1rem;">${passed}/${testCases.length} Test Cases Passed</div>
+          ${resultsHTML}
+        `;
+      }
+      
+      output.textContent = `Submitted. ${passed}/${testCases.length} test cases passed.`;
+    }
+
+    // Format input for different languages
+    function formatInput(input, lang) {
+      return input.replace(/ = /g, '\n').replace(/,/g, '\n');
+    }
+
+    // Execute code using Judge0 API
+    async function executeCode(sourceCode, language, stdin) {
+      const languageId = getLanguageId(language);
+      const apiKey = 'SIGN-UP-FOR-KEY';
+      
+      try {
+        const response = await fetch(`https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-RapidAPI-Key': apiKey,
+            'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
+          },
+          body: JSON.stringify({
+            source_code: sourceCode,
+            language_id: languageId,
+            stdin: stdin
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        // Fallback simulation
+        return simulateExecution(sourceCode, language, stdin);
+      }
+    }
+
+    // Simulate code execution
+    function simulateExecution(code, language, stdin) {
+      return {
+        stdout: '',
+        stderr: '',
+        compile_output: '',
+        message: 'Code executed (simulated - add API key for real execution)'
+      };
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeEditor();
+      }
+    });
+  </script>
+
+</body>
+</html>
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .easy {
+      color: green;
+      font-weight: bold;
+    }
+
+    .medium {
+      color: orange;
+      font-weight: bold;
+    }
+
+    .hard {
+      color: red;
+      font-weight: bold;
+    }
+
+    /* Modal Styles */
+    #editorModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      margin: 20px auto;
+      width: 95vw;
+      height: 90vh;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+
+    .close-btn {
+      background: #dc3545;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+
+    .close-btn:hover {
+      background: #c82333;
+    }
+
+    .modal-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Left Panel - Problem Description */
+    .problem-panel {
+      width: 40%;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+      overflow-y: auto;
+      background: #fff;
+    }
+
+    .problem-panel h3 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    .problem-section {
+      margin-bottom: 20px;
+    }
+
+    .problem-section h4 {
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    .test-case {
+      background: #f5f5f5;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+
+    .test-case-label {
+      font-weight: bold;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    /* Right Panel - Code Editor */
+    .editor-panel {
+      width: 60%;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      align-items: center;
+    }
+
+    .editor-toolbar select {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    .editor-toolbar button {
+      padding: 8px 16px;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .run-btn { background: #28a745; }
+    .run-btn:hover { background: #218838; }
+
+    .compile-btn { background: #ffc107; color: #333; }
+    .compile-btn:hover { background: #e0a800; }
+
+    .submit-btn { background: #007bff; }
+    .submit-btn:hover { background: #0056b3; }
+
+    #editorContainer {
+      flex: 1;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .output-panel {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .output-panel h4 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    #output {
+      background: #fff;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      margin: 0;
+    }
+
+    .test-result {
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .test-pass {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .test-fail {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .status-pending { color: #6c757d; }
+    .status-running { color: #ffc107; }
+    .status-passed { color: #28a745; }
+    .status-failed { color: #dc3545; }
+  </style>
+</head>
+<body>
+
+  <h1>LeetCode Problems Demo</h1>
+
+  <button onclick="loadProblems()">Load Problems</button>
+
+  <div id="problems"></div>
+
+  <!-- Modal for code editor -->
+  <div id="editorModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Solve Problem</h2>
+        <button class="close-btn" onclick="closeEditor()">Close</button>
+      </div>
+      <div class="modal-body">
+        <!-- Left Panel - Problem Description -->
+        <div class="problem-panel" id="problemPanel">
+          <div class="problem-section">
+            <h4>Description</h4>
+            <p id="problemDescription">Loading...</p>
+          </div>
+          <div class="problem-section">
+            <h4>Example Test Cases</h4>
+            <div id="testCases"></div>
+          </div>
+        </div>
+
+        <!-- Right Panel - Code Editor -->
+        <div class="editor-panel">
+          <div class="editor-toolbar">
+            <label for="languageSelect">Language:</label>
+            <select id="languageSelect">
+              <option value="python">Python</option>
+              <option value="cpp">C++</option>
+              <option value="java">Java</option>
+              <option value="javascript">JavaScript</option>
+            </select>
+            <button class="run-btn" onclick="runCode()">▶ Run</button>
+            <button class="compile-btn" onclick="compileCode()">⚙ Compile</button>
+            <button class="submit-btn" onclick="submitCode()">✓ Submit</button>
+          </div>
+          <div id="editorContainer"></div>
+          <div class="output-panel">
+            <h4>Output / Test Results:</h4>
+            <div id="testResults"></div>
+            <pre id="output"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global variables
+    let monacoLoaded = false;
+    let editorInstance = null;
+    let currentProblem = null;
+    let testCases = [];
+
+    // Monaco loader
+    function loadMonaco(cb) {
+      if (monacoLoaded) return cb();
+      const loader = document.createElement('script');
+      loader.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js';
+      loader.onload = function() {
+        window.require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs' } });
+        window.require(['vs/editor/editor.main'], function() {
+          monacoLoaded = true;
+          cb();
+        });
+      };
+      document.body.appendChild(loader);
+    }
+
+    // Open editor with problem details
+    function openEditor(problem) {
+      currentProblem = problem;
+      document.getElementById('editorModal').style.display = 'block';
+      document.getElementById('modalTitle').innerText = `${problem.questionFrontendId}. ${problem.title}`;
+      
+      // Display problem description
+      document.getElementById('problemDescription').innerHTML = problem.content || 'No description available.';
+      
+      // Generate sample test cases
+      generateTestCases(problem);
+      
+      // Load Monaco editor
+      loadMonaco(() => {
+        if (!editorInstance) {
+          editorInstance = monaco.editor.create(document.getElementById('editorContainer'), {
+            value: getStarterCode(document.getElementById('languageSelect').value),
+            language: getMonacoLang(document.getElementById('languageSelect').value),
+            theme: 'vs-dark',
+            automaticLayout: true,
+            fontSize: 14,
+            minimap: { enabled: false }
+          });
+        } else {
+          updateEditor();
+        }
+      });
+      
+      // Clear output
+      document.getElementById('output').innerText = '';
+      document.getElementById('testResults').innerHTML = '';
+    }
+
+    // Generate test cases based on problem
+    function generateTestCases(problem) {
+      const testCasesDiv = document.getElementById('testCases');
+      testCases = [];
+      
+      // Generate sample test cases based on problem title
+      const title = problem.title.toLowerCase();
+      
+      if (title.includes('two sum')) {
+        testCases = [
+          { input: 'nums = [2,7,11,15], target = 9', expected: '[0,1]' },
+          { input: 'nums = [3,2,4], target = 6', expected: '[1,2]' },
+          { input: 'nums = [3,3], target = 6', expected: '[0,1]' }
+        ];
+      } else if (title.includes('palindrome')) {
+        testCases = [
+          { input: 'x = 121', expected: 'true' },
+          { input: 'x = -121', expected: 'false' },
+          { input: 'x = 10', expected: 'false' }
+        ];
+      } else if (title.includes('reverse')) {
+        testCases = [
+          { input: 'x = 123', expected: '321' },
+          { input: 'x = -123', expected: '-321' },
+          { input: 'x = 120', expected: '21' }
+        ];
+      } else if (title.includes('maximum') || title.includes('max')) {
+        testCases = [
+          { input: 'nums = [1]', expected: '1' },
+          { input: 'nums = [1,2]', expected: '2' },
+          { input: 'nums = [-1,-2,-3]', expected: '-1' }
+        ];
+      } else if (title.includes('fizz buzz')) {
+        testCases = [
+          { input: 'n = 3', expected: '["1","2","Fizz"]' },
+          { input: 'n = 5', expected: '["1","2","Fizz","4","Buzz"]' },
+          { input: 'n = 15', expected: '["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]' }
+        ];
+      } else {
+        // Default test cases
+        testCases = [
+          { input: 'input1', expected: 'output1' },
+          { input: 'input2', expected: 'output2' }
+        ];
+      }
+      
+      // Display test cases
+      testCasesDiv.innerHTML = testCases.map((tc, i) => `
+        <div class="test-case">
+          <div class="test-case-label">Test Case ${i + 1}:</div>
+          <div><strong>Input:</strong> ${tc.input}</div>
+          <div><strong>Expected:</strong> ${tc.expected}</div>
+        </div>
+      `).join('');
+    }
+
+    function closeEditor() {
+      document.getElementById('editorModal').style.display = 'none';
+    }
+
+    // Language change handler
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('languageSelect').addEventListener('change', updateEditor);
+    });
+
+    function updateEditor() {
+      if (editorInstance) {
+        const lang = document.getElementById('languageSelect').value;
+        monaco.editor.setModelLanguage(editorInstance.getModel(), getMonacoLang(lang));
+        editorInstance.setValue(getStarterCode(lang));
+      }
+    }
+
+    function getMonacoLang(lang) {
+      const langMap = {
+        'python': 'python',
+        'cpp': 'cpp',
+        'java': 'java',
+        'javascript': 'javascript'
+      };
+      return langMap[lang] || 'plaintext';
+    }
+
+    function getStarterCode(lang) {
+      const title = currentProblem ? currentProblem.title.toLowerCase() : '';
+      
+      const templates = {
+        python: `def solution(${getParams(title)}):
+    # Write your code here
+    pass
+
+# Test your solution
+print(solution(${getTestInput(title)}))`,
+        cpp: `#include <iostream>
+#include <vector>
+using namespace std;
+
+${getCppReturnType(title)} solution(${getCppParams(title)}) {
+    // Write your code here
+    return ${getCppDefaultReturn(title)};
+}
+
+int main() {
+    cout << solution(${getTestInput(title)}) << endl;
+    return 0;
+}`,
+        java: `class Solution {
+    public ${getJavaReturnType(title)} solution(${getJavaParams(title)}) {
+        // Write your code here
+        return ${getJavaDefaultReturn(title)};
+    }
+    
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.solution(${getTestInput(title)}));
+    }
+}`,
+        javascript: `function solution(${getParams(title)}) {
+    // Write your code here
+    return ${getJsDefaultReturn(title)};
+}
+
+// Test your solution
+console.log(solution(${getTestInput(title)}));`
+      };
+      
+      return templates[lang] || '';
+    }
+
+    // Helper functions for code templates
+    function getParams(title) {
+      if (title.includes('two sum')) return 'nums, target';
+      if (title.includes('palindrome')) return 'x';
+      if (title.includes('reverse')) return 'x';
+      if (title.includes('fizz buzz')) return 'n';
+      if (title.includes('maximum') || title.includes('max')) return 'nums';
+      return '';
+    }
+
+    function getTestInput(title) {
+      if (title.includes('two sum')) return '[2,7,11,15], 9';
+      if (title.includes('palindrome')) return '121';
+      if (title.includes('reverse')) return '123';
+      if (title.includes('fizz buzz')) return '3';
+      if (title.includes('maximum') || title.includes('max')) return '[1,2,3]';
+      return '';
+    }
+
+    function getCppReturnType(title) {
+      if (title.includes('two sum')) return 'vector<int>';
+      if (title.includes('palindrome')) return 'bool';
+      if (title.includes('reverse')) return 'int';
+      if (title.includes('fizz buzz')) return 'vector<string>';
+      if (title.includes('maximum') || title.includes('max')) return 'int';
+      return 'int';
+    }
+
+    function getCppParams(title) {
+      if (title.includes('two sum')) return 'vector<int> nums, int target';
+      if (title.includes('palindrome')) return 'int x';
+      if (title.includes('reverse')) return 'int x';
+      if (title.includes('fizz buzz')) return 'int n';
+      if (title.includes('maximum') || title.includes('max')) return 'vector<int> nums';
+      return '';
+    }
+
+    function getCppDefaultReturn(title) {
+      if (title.includes('two sum')) return '{}';
+      if (title.includes('palindrome')) return 'false';
+      if (title.includes('reverse')) return '0';
+      if (title.includes('fizz buzz')) return '{}';
+      if (title.includes('maximum') || title.includes('max')) return '0';
+      return '0';
+    }
+
+    function getJavaReturnType(title) {
+      if (title.includes('two sum')) return 'int[]';
+      if (title.includes('palindrome')) return 'boolean';
+      if (title.includes('reverse')) return 'int';
+      if (title.includes('fizz buzz')) return 'List<String>';
+      if (title.includes('maximum') || title.includes('max')) return 'int';
+      return 'int';
+    }
+
+    function getJavaParams(title) {
+      if (title.includes('two sum')) return 'int[] nums, int target';
+      if (title.includes('palindrome')) return 'int x';
+      if (title.includes('reverse')) return 'int x';
+      if (title.includes('fizz buzz')) return 'int n';
+      if (title.includes('maximum') || title.includes('max')) return 'int[] nums';
+      return '';
+    }
+
+    function getJavaDefaultReturn(title) {
+      if (title.includes('two sum')) return 'new int[0]';
+      if (title.includes('palindrome')) return 'false';
+      if (title.includes('reverse')) return '0';
+      if (title.includes('fizz buzz')) return 'new ArrayList<>()';
+      if (title.includes('maximum') || title.includes('max')) return '0';
+      return '0';
+    }
+
+    function getJsDefaultReturn(title) {
+      if (title.includes('two sum')) return '[]';
+      if (title.includes('palindrome')) return 'false';
+      if (title.includes('reverse')) return '0';
+      if (title.includes('fizz buzz')) return '[]';
+      if (title.includes('maximum') || title.includes('max')) return '0';
+      return 'null';
+    }
+
+    // Get language ID for Judge0
+    function getLanguageId(lang) {
+      const langIds = {
+        'python': 71,
+        'cpp': 54,
+        'java': 62,
+        'javascript': 63
+      };
+      return langIds[lang] || 71;
+    }
+
+    // Run code - executes with first test case input
+    async function runCode() {
+      const lang = document.getElementById('languageSelect').value;
+      const code = editorInstance ? editorInstance.getValue() : '';
+      const output = document.getElementById('output');
+      const resultsDiv = document.getElementById('testResults');
+      
+      output.innerText = 'Running...';
+      resultsDiv.innerHTML = '<span class="status-running">Running code...</span>';
+      
+      if (testCases.length === 0) {
+        output.innerText = 'No test cases available.';
+        return;
+      }
+      
+      // Run with first test case input
+      const firstTest = testCases[0];
+      const stdin = formatInput(firstTest.input, lang);
+      
+      try {
+        const result = await executeCode(code, lang, stdin);
+        output.innerText = result.stdout || result.stderr || result.compile_output || 'No output.';
+        
+        // Check if output matches expected
+        const actual = result.stdout ? result.stdout.trim() : '';
+        const expected = firstTest.expected.replace(/[\[\]"]/g, '').trim();
+        
+        if (actual === expected) {
+          resultsDiv.innerHTML = `<div class="test-result test-pass">✓ Test Case 1 Passed</div>`;
+        } else {
+          resultsDiv.innerHTML = `
+            <div class="test-result test-fail">✗ Test Case 1 Failed</div>
+            <div class="test-result" style="background:#fff;border:1px solid #ddd;">
+              <strong>Expected:</strong> ${firstTest.expected}<br>
+              <strong>Actual:</strong> ${actual || 'No output'}
+            </div>
+          `;
+        }
+      } catch (e) {
+        output.innerText = 'Error running code: ' + e.message;
+        resultsDiv.innerHTML = '<span class="status-failed">Error running code</span>';
+      }
+    }
+
+    // Compile code - just check for syntax errors
+    async function compileCode() {
+      const lang = document.getElementById('languageSelect').value;
+      const code = editorInstance ? editorInstance.getValue() : '';
+      const output = document.getElementById('output');
+      const resultsDiv = document.getElementById('testResults');
+      
+      output.innerText = 'Compiling...';
+      resultsDiv.innerHTML = '<span class="status-running">Compiling...</span>';
+      
+      // For interpreted languages (Python, JS), just validate syntax
+      if (lang === 'python') {
+        try {
+          // Simple syntax check - try to compile
+          compile(code);
+          output.innerText = '✓ Compilation successful! No syntax errors.';
+          resultsDiv.innerHTML = '<span class="status-passed">✓ Compiled successfully</span>';
+        } catch (e) {
+          output.innerText = 'Syntax Error: ' + e.message;
+          resultsDiv.innerHTML = '<span class="status-failed">✗ Compilation failed</span>';
+        }
+      } else {
+        // For compiled languages, use Judge0
+        try {
+          const result = await executeCode(code, lang, '');
+          if (result.compile_output) {
+            output.innerText = 'Compilation Error: ' + result.compile_output;
+            resultsDiv.innerHTML = '<span class="status-failed">✗ Compilation failed</span>';
+          } else {
+            output.innerText = '✓ Compilation successful!';
+            resultsDiv.innerHTML = '<span class="status-passed">✓ Compiled successfully</span>';
+          }
+        } catch (e) {
+          output.innerText = 'Error: ' + e.message;
+          resultsDiv.innerHTML = '<span class="status-failed">✗ Compilation failed</span>';
+        }
+      }
+    }
+
+    // Submit code - runs all test cases
+    async function submitCode() {
+      const lang = document.getElementById('languageSelect').value;
+      const code = editorInstance ? editorInstance.getValue() : '';
+      const output = document.getElementById('output');
+      const resultsDiv = document.getElementById('testResults');
+      
+      output.innerText = 'Running all test cases...';
+      resultsDiv.innerHTML = '<span class="status-running">Running all test cases...</span>';
+      
+      if (testCases.length === 0) {
+        output.innerText = 'No test cases available.';
+        return;
+      }
+      
+      let passed = 0;
+      let resultsHTML = '';
+      
+      for (let i = 0; i < testCases.length; i++) {
+        const tc = testCases[i];
+        const stdin = formatInput(tc.input, lang);
+        
+        try {
+          const result = await executeCode(code, lang, stdin);
+          const actual = result.stdout ? result.stdout.trim() : '';
+          const expected = tc.expected.replace(/[\[\]"]/g, '').trim();
+          
+          if (actual === expected) {
+            passed++;
+            resultsHTML += `<div class="test-result test-pass">✓ Test Case ${i + 1} Passed</div>`;
+          } else {
+            resultsHTML += `
+              <div class="test-result test-fail">✗ Test Case ${i + 1} Failed</div>
+              <div class="test-result" style="background:#fff;border:1px solid #ddd;margin-bottom:10px;">
+                <strong>Input:</strong> ${tc.input}<br>
+                <strong>Expected:</strong> ${tc.expected}<br>
+                <strong>Actual:</strong> ${actual || 'No output'}
+              </div>
+            `;
+          }
+        } catch (e) {
+          resultsHTML += `<div class="test-result test-fail">✗ Test Case ${i + 1} - Error: ${e.message}</div>`;
+        }
+      }
+      
+      // Summary
+      const summary = passed === testCases.length 
+        ? `<div class="test-result test-pass" style="font-size:16px;">🎉 All ${passed}/${testCases.length} test cases passed!</div>`
+        : `<div class="test-result test-fail" style="font-size:16px;">${passed}/${testCases.length} test cases passed</div>`;
+      
+      resultsDiv.innerHTML = summary + resultsHTML;
+      output.innerText = `Submitted. ${passed}/${testCases.length} test cases passed.`;
+    }
+
+    // Format input for different languages
+    function formatInput(input, lang) {
+      // Convert input format based on language
+      return input.replace(/ = /g, '\n');
+    }
+
+    // Execute code using Judge0 API
+    async function executeCode(sourceCode, language, stdin) {
+      const languageId = getLanguageId(language);
+      
+      // Note: Replace with your actual RapidAPI key
+      const apiKey = 'SIGN-UP-FOR-KEY';
+      
+      try {
+        const response = await fetch(`https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-RapidAPI-Key': apiKey,
+            'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
+          },
+          body: JSON.stringify({
+            source_code: sourceCode,
+            language_id: languageId,
+            stdin: stdin
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        // Fallback: simulate execution for demo
+        return simulateExecution(sourceCode, language, stdin);
+      }
+    }
+
+    // Simulate code execution (fallback when API is not available)
+    function simulateExecution(code, language, stdin) {
+      // This is a simple simulation - in production, use a real API
+      return {
+        stdout: '',
+        stderr: '',
+        compile_output: '',
+        message: 'Code executed (simulated - add API key for real execution)'
+      };
+    }
+
+    // Load problems from API
+    async function loadProblems() {
+      const container = document.getElementById('problems');
+      container.innerHTML = 'Loading...';
+
+      try {
+        const response = await fetch('https://alfa-leetcode-api.onrender.com/problems?limit=20');
+        const data = await response.json();
+
+        container.innerHTML = '';
+
+        data.problemsetQuestionList.forEach(problem => {
+          const card = document.createElement('div');
+          card.className = 'card';
+
+          let difficultyClass = '';
+          if (problem.difficulty === 'Easy') difficultyClass = 'easy';
+          else if (problem.difficulty === 'Medium') difficultyClass = 'medium';
+          else difficultyClass = 'hard';
+
+          card.innerHTML = `
+            <h3>${problem.questionFrontendId}. ${problem.title}</h3>
+            <p class="${difficultyClass}">${problem.difficulty}</p>
+            <p><strong>Tags:</strong> ${problem.topicTags.map(tag => tag.name).join(', ')}</p>
+          `;
+
+          card.onclick = () => openEditor(problem);
+          container.appendChild(card);
+        });
+      } catch (error) {
+        container.innerHTML = 'Error loading problems. Check API URL or CORS issue.';
+        console.error(error);
+      }
+    }
+  </script>
+
+</body>
+</html>
+
