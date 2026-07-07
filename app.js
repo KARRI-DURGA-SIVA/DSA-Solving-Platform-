@@ -4,6 +4,50 @@ const API_ROOT = "https://alfa-leetcode-api.onrender.com";
 const PAGE_SIZE = 12;
 const CACHE_KEY = "codeforge_problem_catalog_v2";
 const SOLVED_KEY = "codeforge_solved_v1";
+const EXECUTION_API = "https://ce.judge0.com/submissions?base64_encoded=false&wait=true";
+
+const runtimes = {
+  java: {
+    id: 91,
+    file: "Main.java",
+    starter: `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Ready to solve!");
+    }
+}`
+  },
+  python: {
+    id: 109,
+    file: "main.py",
+    starter: `def solve():
+    print("Ready to solve!")
+
+if __name__ == "__main__":
+    solve()`
+  },
+  javascript: {
+    id: 102,
+    file: "main.js",
+    starter: `function solve(input) {
+  console.log("Ready to solve!");
+}
+
+const input = require("fs").readFileSync(0, "utf8").trim();
+solve(input);`
+  },
+  sql: {
+    id: 82,
+    file: "solution.sql",
+    starter: `-- Create sample tables and write your query below.
+CREATE TABLE numbers (value INTEGER);
+INSERT INTO numbers VALUES (1), (2), (3);
+
+SELECT * FROM numbers;`
+  }
+};
 
 const fallbackProblems = [
   ["1", "Two Sum", "two-sum", "Easy", ["Array", "Hash Table"]],
@@ -59,6 +103,8 @@ const state = {
   difficulty: "all",
   topic: "all",
   selected: null,
+  currentLanguage: "java",
+  running: false,
   solved: new Set(readJson(SOLVED_KEY, []))
 };
 
@@ -140,15 +186,24 @@ function bindDialogs() {
   $("#markSolved").addEventListener("click", () => {
     if (!state.selected) return;
     toggleSolved(state.selected.slug, true);
-    $("#problemModal").close();
   });
-  $("#solveInCompiler").addEventListener("click", () => {
-    const language = state.selected?.topics.includes("Database") ? "mysql" : "java";
-    $("#problemModal").close();
-    openCompiler(language);
+  $("#compilerLanguage").addEventListener("change", event => {
+    saveDraft();
+    state.currentLanguage = event.target.value;
+    loadEditor();
   });
-  $("#compilerLanguage").addEventListener("change", event => loadCompiler(event.target.value));
-  $("#compilerFrame").addEventListener("load", () => $("#compilerLoading").hidden = true);
+  $("#resetCode").addEventListener("click", () => {
+    if (!window.confirm("Reset this editor to the starter code?")) return;
+    $("#codeEditor").value = runtimes[state.currentLanguage].starter;
+    saveDraft();
+    setOutput("Starter code restored.");
+  });
+  $("#codeEditor").addEventListener("input", debounce(saveDraft, 350));
+  $("#codeEditor").addEventListener("keydown", handleEditorKeydown);
+  $("#compileCode").addEventListener("click", () => executeCode("compile"));
+  $("#runCode").addEventListener("click", () => executeCode("run"));
+  $("#submitCode").addEventListener("click", () => executeCode("submit"));
+  $$(".console-tab").forEach(tab => tab.addEventListener("click", () => switchConsoleTab(tab.dataset.consoleTab)));
 }
 
 async function loadProblems() {
@@ -161,15 +216,14 @@ async function loadProblems() {
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 30000);
-    const response = await fetch(`${API_ROOT}/problems?limit=4000`, { signal: controller.signal });
-    clearTimeout(timer);
+    const response = await fetchWithTimeout(`${API_ROOT}/problems?limit=4000`, { signal: controller.signal }, timer);
     if (!response.ok) throw new Error(`Problem API returned ${response.status}`);
     const data = await response.json();
     const list = data.problemsetQuestionList || data.questions || data.problems || [];
     const normalized = list.map(normalizeProblem).filter(problem => problem.title && problem.slug);
     if (!normalized.length) throw new Error("Problem API returned an empty catalog");
     setProblems(normalized);
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ savedAt: Date.now(), problems: normalized })); } catch (_) { /* Quota can vary by browser. */ }
+    setStorage(CACHE_KEY, JSON.stringify({ savedAt: Date.now(), problems: normalized }));
     setApiState("online", `${normalized.length.toLocaleString()} live problems`);
   } catch (error) {
     console.warn("Catalog API unavailable:", error);
@@ -269,12 +323,18 @@ async function openProblem(slug) {
   const problem = state.problems.find(item => item.slug === slug);
   if (!problem) return;
   state.selected = problem;
+  const language = problem.topics.includes("Database") ? "sql" : state.currentLanguage === "sql" ? "java" : state.currentLanguage;
+  $("#workspaceLabel").textContent = "Problem workspace";
   $("#modalTitle").textContent = `${problem.id}. ${problem.title}`;
   $("#modalBody").innerHTML = '<p class="modal-error">Loading the complete problem statement…</p>';
   $("#markSolved").textContent = state.solved.has(slug) ? "Mark as unsolved" : "Mark as solved";
-  $("#problemModal").showModal();
+  $("#markSolved").hidden = false;
+  prepareEditor(language);
+  if (!$("#problemModal").open) $("#problemModal").showModal();
   try {
-    const response = await fetch(`${API_ROOT}/select?titleSlug=${encodeURIComponent(slug)}`);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15000);
+    const response = await fetchWithTimeout(`${API_ROOT}/select?titleSlug=${encodeURIComponent(slug)}`, { signal: controller.signal }, timer);
     if (!response.ok) throw new Error(`Detail API returned ${response.status}`);
     const data = await response.json();
     const detail = typeof data.question === "object" ? data.question : data;
@@ -311,7 +371,7 @@ function sanitizeHtml(html) {
 function toggleSolved(slug, fromModal = false) {
   if (state.solved.has(slug)) state.solved.delete(slug);
   else state.solved.add(slug);
-  localStorage.setItem(SOLVED_KEY, JSON.stringify([...state.solved]));
+  setStorage(SOLVED_KEY, JSON.stringify([...state.solved]));
   updateSolvedCount();
   renderProblems();
   showToast(state.solved.has(slug) ? "Saved as solved — nicely done." : "Moved back to your practice list.");
@@ -329,18 +389,116 @@ function resetFilters() {
 }
 
 function openCompiler(language = "java") {
-  const modal = $("#compilerModal");
-  $("#compilerLanguage").value = language;
-  if (!modal.open) modal.showModal();
-  loadCompiler(language);
+  state.selected = null;
+  $("#workspaceLabel").textContent = "Online playground";
+  $("#modalTitle").textContent = "Code compiler";
+  $("#markSolved").hidden = true;
+  $("#modalBody").innerHTML = `<h3>Fast coding playground</h3><p>Choose a language, write your program, add optional custom input, and run it. Your draft is saved automatically on this device.</p><p class="modal-error">Code runs in an isolated Judge0 environment. Avoid placing passwords, API keys, or private data in the editor.</p>`;
+  prepareEditor(runtimes[language] ? language : "java");
+  if (!$("#problemModal").open) $("#problemModal").showModal();
 }
 
-function loadCompiler(language) {
-  $("#compilerLoading").hidden = false;
-  const dark = !document.body.classList.contains("light");
-  const params = new URLSearchParams({ hideNew: "true", hideLanguageSelection: "true" });
-  if (dark) params.set("theme", "dark");
-  $("#compilerFrame").src = `https://onecompiler.com/embed/${encodeURIComponent(language)}?${params}`;
+function prepareEditor(language) {
+  state.currentLanguage = language;
+  $("#compilerLanguage").value = language;
+  loadEditor();
+  switchConsoleTab("output");
+  $("#runMeta").textContent = "";
+  setOutput("Press Run to execute your code.");
+}
+
+function loadEditor() {
+  const runtime = runtimes[state.currentLanguage];
+  $("#editorFileName").textContent = runtime.file;
+  $("#codeEditor").value = getStorage(draftKey()) || runtime.starter;
+}
+
+function draftKey() {
+  return `codeforge_draft_${state.selected?.slug || "playground"}_${state.currentLanguage}`;
+}
+
+function saveDraft() {
+  setStorage(draftKey(), $("#codeEditor").value);
+}
+
+function handleEditorKeydown(event) {
+  if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+    event.preventDefault();
+    executeCode("run");
+    return;
+  }
+  if (event.key === "Tab") {
+    event.preventDefault();
+    const editor = event.currentTarget;
+    const start = editor.selectionStart;
+    editor.setRangeText("    ", start, editor.selectionEnd, "end");
+    saveDraft();
+  }
+}
+
+function switchConsoleTab(tabName) {
+  $$(".console-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.consoleTab === tabName));
+  $("#codeOutput").hidden = tabName !== "output";
+  $("#codeInput").hidden = tabName !== "input";
+}
+
+async function executeCode(action) {
+  if (state.running) return;
+  const sourceCode = $("#codeEditor").value;
+  if (!sourceCode.trim()) { setOutput("Write some code before running it.", "error"); return; }
+  state.running = true;
+  saveDraft();
+  switchConsoleTab("output");
+  setExecutionButtons(true);
+  setOutput(action === "compile" ? "Compiling…" : action === "submit" ? "Running final check…" : "Running…", "running");
+  $("#runMeta").textContent = "Please wait";
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 40000);
+    const response = await fetchWithTimeout(EXECUTION_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        language_id: runtimes[state.currentLanguage].id,
+        source_code: sourceCode,
+        stdin: $("#codeInput").value
+      }),
+      signal: controller.signal
+    }, timer);
+    if (!response.ok) throw new Error(`Compiler returned HTTP ${response.status}`);
+    const result = await response.json();
+    const failed = Boolean(result.compile_output || result.stderr || (result.status?.id && result.status.id !== 3));
+    const text = result.compile_output || result.stderr || result.stdout || result.message || (action === "compile" ? "Compilation successful. No output." : "Program finished with no output.");
+    const heading = failed ? `${result.status?.description || "Execution failed"}\n\n` : action === "compile" ? "Build successful\n\n" : "Execution successful\n\n";
+    const submitNote = action === "submit" && !failed ? "\n\nSaved locally and marked solved. Hidden LeetCode tests are not run by this compiler." : "";
+    setOutput(heading + text.trimEnd() + submitNote, failed ? "error" : "success");
+    $("#runMeta").textContent = [result.time ? `${result.time}s` : "", result.memory ? `${Math.round(result.memory / 1024)} MB` : ""].filter(Boolean).join(" · ");
+    if (action === "submit" && !failed) {
+      if (state.selected && !state.solved.has(state.selected.slug)) toggleSolved(state.selected.slug, true);
+      showToast(state.selected ? "Solution saved and problem marked solved." : "Code saved successfully.");
+    }
+  } catch (error) {
+    const message = error.name === "AbortError" ? "The compiler timed out. Please try again." : "The compiler service could not be reached. Check your connection and try again.";
+    setOutput(`${message}\n\n${error.message}`, "error");
+    $("#runMeta").textContent = "Unavailable";
+  } finally {
+    state.running = false;
+    setExecutionButtons(false);
+  }
+}
+
+function setOutput(message, stateName = "") {
+  const output = $("#codeOutput");
+  output.textContent = message;
+  output.className = `code-output ${stateName}`.trim();
+}
+
+function setExecutionButtons(disabled) {
+  ["#compileCode", "#runCode", "#submitCode"].forEach(selector => {
+    const button = $(selector);
+    if (button) button.disabled = disabled;
+  });
 }
 
 function renderRoadmap() {
@@ -354,7 +512,7 @@ function setApiState(type, message) {
 }
 
 function restoreTheme() {
-  const stored = localStorage.getItem("codeforge_theme");
+  const stored = getStorage("codeforge_theme");
   const light = stored ? stored === "light" : false;
   document.body.classList.toggle("light", light);
   updateThemeIcon();
@@ -362,9 +520,8 @@ function restoreTheme() {
 
 function toggleTheme() {
   document.body.classList.toggle("light");
-  localStorage.setItem("codeforge_theme", document.body.classList.contains("light") ? "light" : "dark");
+  setStorage("codeforge_theme", document.body.classList.contains("light") ? "light" : "dark");
   updateThemeIcon();
-  if ($("#compilerModal").open) loadCompiler($("#compilerLanguage").value);
 }
 
 function updateThemeIcon() {
@@ -391,7 +548,28 @@ function showToast(message) {
 }
 
 function readJson(key, fallback) {
-  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch (_) { return fallback; }
+  try { return JSON.parse(getStorage(key)) ?? fallback; } catch (_) { return fallback; }
+}
+
+async function fetchWithTimeout(url, options, timer) {
+  try {
+    return await fetch(url, options);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function getStorage(key) {
+  try { return localStorage.getItem(key); } catch (_) { return null; }
+}
+
+function setStorage(key, value) {
+  try { localStorage.setItem(key, value); } catch (_) { /* Storage may be disabled or full. */ }
+}
+
+function debounce(callback, delay) {
+  let timer;
+  return (...args) => { clearTimeout(timer); timer = setTimeout(() => callback(...args), delay); };
 }
 
 function escapeHtml(value) {

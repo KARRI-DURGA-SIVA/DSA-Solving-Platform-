@@ -169,11 +169,11 @@
         <span class="section-kicker">Built-in workspace</span>
         <h2>Think it. Type it.<br><em>Run it.</em></h2>
         <p>Use a complete online environment for Java, Python, JavaScript and SQL. No setup, downloads or secret API key required.</p>
-        <div class="language-list"><span>☕ Java</span><span>Py Python</span><span>JS JavaScript</span><span>▤ SQL</span></div>
+        <div class="language-list"><span>Java 17</span><span>Python 3.13</span><span>Node.js 22</span><span>SQLite</span></div>
         <button class="button button-light button-large" data-open-compiler>Launch compiler <span>↗</span></button>
       </div>
       <div class="terminal-card reveal" aria-hidden="true">
-        <div class="terminal-head"><span><i></i><i></i><i></i></span><b>CodeForge Terminal</b><small>Java 21</small></div>
+        <div class="terminal-head"><span><i></i><i></i><i></i></span><b>CodeForge Terminal</b><small>Java 17</small></div>
         <pre><span class="prompt">$</span> javac Main.java &amp;&amp; java Main
 
 <span class="muted">Compiling...</span>
@@ -194,34 +194,52 @@ Ready to solve something brilliant?
     <div><a href="#problems">Problems</a><a href="#tracks">Tracks</a><button data-open-compiler>Compiler</button></div>
   </footer>
 
-  <dialog class="modal problem-modal" id="problemModal">
-    <div class="modal-head">
-      <div><span class="modal-label">Problem</span><h2 id="modalTitle">Loading…</h2></div>
-      <button class="modal-close" data-close-modal aria-label="Close">×</button>
-    </div>
-    <div class="modal-body" id="modalBody"></div>
-    <div class="modal-actions">
-      <button class="button button-ghost" id="markSolved">Mark as solved</button>
-      <button class="button button-primary" id="solveInCompiler">Solve in compiler <span>→</span></button>
-    </div>
-  </dialog>
-
-  <dialog class="modal compiler-modal" id="compilerModal">
-    <div class="modal-head compiler-head">
-      <div><span class="modal-label">Online workspace</span><h2>Code compiler</h2></div>
-      <label>Language
+  <dialog class="workspace-modal" id="problemModal">
+    <div class="workspace-head">
+      <div class="workspace-title"><span class="modal-label" id="workspaceLabel">Problem workspace</span><h2 id="modalTitle">Loading…</h2></div>
+      <label class="language-picker">Language
         <select id="compilerLanguage">
-          <option value="java">Java</option>
-          <option value="python">Python</option>
-          <option value="javascript">JavaScript</option>
-          <option value="mysql">SQL</option>
+          <option value="java">Java 17</option>
+          <option value="python">Python 3.13</option>
+          <option value="javascript">Node.js 22</option>
+          <option value="sql">SQL (SQLite)</option>
         </select>
       </label>
-      <button class="modal-close" data-close-modal aria-label="Close">×</button>
+      <button class="modal-close" data-close-modal aria-label="Close workspace">×</button>
     </div>
-    <div class="compiler-loading" id="compilerLoading">Loading secure compiler…</div>
-    <iframe id="compilerFrame" title="Online code compiler" loading="lazy" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-    <p class="compiler-credit">Compiler environment provided by OneCompiler. Code runs in its isolated service.</p>
+
+    <div class="workspace-grid">
+      <section class="problem-pane" aria-label="Problem statement">
+        <div class="pane-label"><span>Problem</span><button id="markSolved">Mark as solved</button></div>
+        <div class="problem-content" id="modalBody"></div>
+      </section>
+
+      <section class="editor-pane" aria-label="Code editor">
+        <div class="editor-bar">
+          <span id="editorFileName">Main.java</span>
+          <span class="editor-ready"><i></i> Ready</span>
+          <button id="resetCode" title="Reset starter code">Reset code</button>
+        </div>
+        <label class="code-editor-label" for="codeEditor">Source code</label>
+        <textarea id="codeEditor" class="code-editor" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Source code editor"></textarea>
+        <div class="console-panel">
+          <div class="console-tabs">
+            <button class="console-tab active" data-console-tab="output">Output</button>
+            <button class="console-tab" data-console-tab="input">Custom input</button>
+            <span id="runMeta"></span>
+          </div>
+          <pre id="codeOutput" class="code-output">Press Run to execute your code.</pre>
+          <textarea id="codeInput" class="code-input" placeholder="Input passed to your program (stdin)…" aria-label="Custom program input" hidden></textarea>
+        </div>
+      </section>
+    </div>
+
+    <div class="workspace-actions">
+      <span class="workspace-hint">⌘/Ctrl + Enter to run</span>
+      <button class="button button-ghost" id="compileCode">⚙ Compile</button>
+      <button class="button button-ghost" id="runCode">▶ Run</button>
+      <button class="button button-primary" id="submitCode">✓ Submit code</button>
+    </div>
   </dialog>
 
   <dialog class="modal roadmap-modal" id="roadmapModal">
