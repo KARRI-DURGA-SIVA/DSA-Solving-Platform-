@@ -1,0 +1,13 @@
+{
+  "name": "codeforge-practice-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static coding-practice platform with a Cloud Run compatible server.",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check app.js && node --check server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
