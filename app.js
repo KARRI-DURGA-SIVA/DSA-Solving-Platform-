@@ -102,6 +102,7 @@ const state = {
   query: "",
   difficulty: "all",
   topic: "all",
+  track: "all",
   selected: null,
   currentLanguage: "java",
   running: false,
@@ -139,12 +140,13 @@ function bindNavigation() {
   $$('[data-open-compiler]').forEach(button => button.addEventListener("click", () => openCompiler()));
   $$('[data-track]').forEach(button => button.addEventListener("click", () => {
     const topic = button.dataset.track;
-    $("#topicFilter").value = [...$("#topicFilter").options].some(option => option.value === topic) ? topic : "all";
-    state.topic = $("#topicFilter").value;
-    if (topic === "Database" && state.topic === "all") {
-      state.query = "database";
-      $("#problemSearch").value = "database";
-    }
+    state.query = "";
+    state.difficulty = "all";
+    state.topic = topic === "Database" ? "Database" : "all";
+    state.track = topic === "Algorithms" ? "Algorithms" : "all";
+    $("#problemSearch").value = "";
+    $("#difficultyFilter").value = "all";
+    $("#topicFilter").value = state.topic;
     applyFilters();
     $("#problems").scrollIntoView({ behavior: "smooth" });
   }));
@@ -164,6 +166,7 @@ function bindFilters() {
   });
   $("#topicFilter").addEventListener("change", event => {
     state.topic = event.target.value;
+    state.track = "all";
     state.page = 1;
     applyFilters();
   });
@@ -267,7 +270,8 @@ function applyFilters() {
     const searchable = `${problem.id} ${problem.title} ${problem.topics.join(" ")}`.toLowerCase();
     return (!state.query || searchable.includes(state.query)) &&
       (state.difficulty === "all" || problem.difficulty === state.difficulty) &&
-      (state.topic === "all" || problem.topics.includes(state.topic));
+      (state.topic === "all" || problem.topics.includes(state.topic)) &&
+      (state.track !== "Algorithms" || !problem.topics.includes("Database"));
   });
   const maxPage = Math.max(1, Math.ceil(state.filtered.length / PAGE_SIZE));
   state.page = Math.min(state.page, maxPage);
@@ -383,7 +387,7 @@ function updateSolvedCount() {
 }
 
 function resetFilters() {
-  state.query = ""; state.difficulty = "all"; state.topic = "all"; state.page = 1;
+  state.query = ""; state.difficulty = "all"; state.topic = "all"; state.track = "all"; state.page = 1;
   $("#problemSearch").value = ""; $("#difficultyFilter").value = "all"; $("#topicFilter").value = "all";
   applyFilters();
 }

@@ -5,7 +5,8 @@
   "description": "Static coding-practice platform with a Cloud Run compatible server.",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check app.js && node --check server.js"
+    "check": "node --check app.js && node --check server.js",
+    "test": "node --test test/*.test.js"
   },
   "engines": {
     "node": ">=18"
